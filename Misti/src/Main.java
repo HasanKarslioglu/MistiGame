@@ -11,10 +11,15 @@ public class Main {
     private static ArrayList<Card> unDistributedDeck = new ArrayList<>();
     //*Round her bir turda artcak
     static private int round = 0;
+
     //*Bu ilerde eklencek her turda biri kart attığında step artacak
     //static private int stepEachRound = 0;
+
+
     //*Player listesi(add veya remove yapmayacağımız için dümdüz array kullandım arraylist yerine)
-    static private Player[] playerList = new Player[4];
+    static private ArrayList<Player> playerList = new ArrayList<>();
+
+    static private int numberOfPlayer;
 
 
     //*Main sadece 3 kısımdan oluşacak
@@ -28,6 +33,9 @@ public class Main {
     }
 
     public static void initializeGame(){
+
+        //BUNU KULLANICIYA SORACAĞIZ şu anlık 2 3 veya 4 için çalışıyo
+        numberOfPlayer = 4;
 
         //Reading txt file that created before by hand
         try {
@@ -54,10 +62,12 @@ public class Main {
         ComputerPlayer bot3 = new ComputerPlayer("Bot 3");
 
         //*Oyuncularımızı player listemize ekliyoruz
-        playerList[0] = human;
-        playerList[1] = bot1;
-        playerList[2] = bot2;
-        playerList[3] = bot3;
+        playerList.add(human);
+        playerList.add(bot1);
+        playerList.add(bot2);
+        playerList.add(bot3);
+
+        playerList.get(0).setBoardCardRef(boardDeck);
 
         //*Yere 4 tane kart açıyoruz
         for (int i = 0; i < 4; i++) {
@@ -65,27 +75,37 @@ public class Main {
         }
 
         //TO DO
-        //Kullanıcıdan bilgiler alınacak
-        //Shuffle yapılacak
-        //Cut yapılacak
+        //Kullanıcıdan bilgiler alınacak(Kaç oyuncu oynayacak 2 mi 3 mü 4 mü)
+        //Bu belirtildikten sonra örneğin 3 kişi seçti, ilk oyuncu insan mı olacak bot mu seçtikten sonra adı ne
+        //2. oyuncu insan mı bot mu seçtikten sonra adı ne
+        //eğer bir defa bile insan seçilmişse bir daha o seçenek çıkmayacak diğerleri otomatik bot olacak ama adını ve
+        //zorluk derecesini soracağız
+        //Kartlar Shuffle yapılacak(Kendi metodumuzu yazmayacaz hazır metodları kullancaz)
+        //Cut yapılacak(Bunu baştan yazcaz sanırım (eğer öyle bir metod yoksa))
         //Tek tek bütün oyuncuların adı ve zorluk derecesi girilecek
     }
 
     public static void loopGame(){
 
+        printUnDistributedDeck();
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
         //Her oyuncuya kartlar dağıtılıyor
-        for (int j = 0; j < 4; j++) {
-            dealCards(playerList[j]);
+        for (int i = 0; i < numberOfPlayer; i++) {
+            dealCards(playerList.get(i));
         }
         //Kartlar printleniyor
         printRound();
-        printUnDistributedDeck();
+        for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < numberOfPlayer; i++) {
+                playerList.get(i).playCard();
+                printRound();
+            }
+        }
+
+
 
         //ROund arttırılıyor
         round++;
-
-
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
         if (unDistributedDeck.size() != 0)
             loopGame();
@@ -106,33 +126,42 @@ public class Main {
     }
 
     public static void printRound(){
+        //Bütün bir roundu yazdırmak için olan kod
         System.out.println("-----------------ROUND "+ round +"------------------------");
-        System.out.print("Bot1(" + printDeck(playerList[1].handCards) + ")  " +
-                         "Bot2(" + printDeck(playerList[2].handCards) + ")  " +
-                         "Bot3(" + printDeck(playerList[3].handCards) + ")");
+        System.out.print("Bot1(" + printDeck(playerList.get(1).handCards) + ")  " +
+                         "Bot2(" + printDeck(playerList.get(2).handCards) + ")  " +
+                         "Bot3(" + printDeck(playerList.get(3).handCards) + ")");
         System.out.println("");
         System.out.println("");
 
         System.out.println("Board("+(printDeck(boardDeck)+")"));
         System.out.println("");
 
-        System.out.println("MyHand("+printDeck(playerList[3].handCards)+")");
+        System.out.println("MyHand("+printDeck(playerList.get(0).handCards)+")");
+        System.out.println("----------------------------------------------------------");
+        //TO DO ilerde buna mod ekleyip eğer onu seçtiysek rakibin eli ve dağıtılmamış deste gösterilecek
+        //Ya da ikisi de gizli olacak şeklinde ayarlayacağız. Şu an test aşamasında bu yüzden her şeyi gizlemeden
+        //Gösteriyor
     }
 
+    //Bir tane desteyi yazdırmak için olan yardımcı fonksiyon
     private static String printDeck(ArrayList<Card> list){
         String temp = "";
-        for (Card each: list) {
-            temp += each.getCardString();
+        for (int i = 0; i < list.size(); i++) {
+            temp += list.get(i).getCardString();
         }
         return temp;
     }
 
+    //Kartları dağıtan fonksiyon
     private static void dealCards(Player player){
         for (int i = 0; i < 4; i++) {
             player.getHandCards().add(unDistributedDeck.remove(unDistributedDeck.size()-1));
         }
     }
 
+
+    //Henüz dağıtılmamış olan ya da bir kısmı dağıtılmış olan ana destemizi yazdırıyor
     private static void printUnDistributedDeck(){
         String temp = "UnDistributedDeck:";
         for (int i = 0; i < unDistributedDeck.size(); i++) {
@@ -140,6 +169,7 @@ public class Main {
         }
         System.out.println(temp);
     }
+
 }
 
 

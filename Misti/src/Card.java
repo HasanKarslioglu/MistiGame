@@ -12,11 +12,6 @@ public class Card {
         cardFace = "#";
         cardPoint = 0;
     }
-    public Card(String suit, String cardFace, int cardPoint) {
-        this.suit = suit;
-        this.cardFace = cardFace;
-        this.cardPoint = cardPoint;
-    }
 
     //-----------METHODS------------
     public String getCardString(){
