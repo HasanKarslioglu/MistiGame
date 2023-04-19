@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
@@ -27,7 +28,25 @@ public abstract class Player {
 
     //-----------METHODS------------
     //Her alt classın kendine ait bir play mekaniği olacak o yüzden bu abstract
-    public abstract void playCard();
+    public void playCard(){
+        //ÇOK ÖNEMLİ!!!!!!!!!!!!!!
+        //ÖNCE Alt sınıfların playcardı çalışcak en son super.playCard() ı çalıştırınca buradaki fonksiyon çalışcak
+        //Bu sayede kart seçimi ve oynanması olduktan sonra burada, boarddeckin son iki kartı aynı ise kartlar toplanacak
+
+        if (isCollectable())
+        {
+            System.out.println(getName() + "Took all cards");
+            collectedCards.addAll(boardCardRef);
+            boardCardRef.clear();
+        }
+        //TODO Calculate player score!!!
+    };
+
+    private boolean isCollectable(){
+        return ((boardCardRef.size() > 1) &&
+                (boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals(boardCardRef.get(boardCardRef.size() - 2).getCardFace()))
+                || boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals("J"));
+    }
 
 
     //-----------GETTERS------------

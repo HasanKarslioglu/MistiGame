@@ -31,5 +31,6 @@ public class ComputerPlayer extends Player {
         //(Deneme aşamasında) hep ilk kartı atıyor yere
         System.out.println(getName() +" played " + getHandCards().get(choose).getCardString());
         boardCardRef.add(getHandCards().remove(choose));
+        super.playCard();
     }
 }

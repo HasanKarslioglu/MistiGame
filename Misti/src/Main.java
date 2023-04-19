@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.io.File;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
@@ -68,6 +69,7 @@ public class Main {
         playerList.add(bot3);
 
         playerList.get(0).setBoardCardRef(boardDeck);
+        Collections.shuffle(unDistributedDeck);
 
         //*Yere 4 tane kart açıyoruz
         for (int i = 0; i < 4; i++) {
