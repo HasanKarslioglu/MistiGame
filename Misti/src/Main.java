@@ -36,25 +36,10 @@ public class Main {
     public static void initializeGame(){
 
         //BUNU KULLANICIYA SORACAĞIZ şu anlık 2 3 veya 4 için çalışıyo
-        numberOfPlayer = 4;
 
-        //Reading txt file that created before by hand
-        try {
-            File scoreText = new File("src\\CardValues.txt");
-            Scanner sc = new Scanner(scoreText);
+        readCardValuesText();
+        askHowManyPlayersWillPlay();
 
-            while (sc.hasNextLine()){
-                //Creating unDistributedDeck based on CardValues.txt
-                String[] currentLine = sc.nextLine().split(" ");
-                Card tempCard = new Card();
-                tempCard.setSuit(currentLine[0].substring(0,1));
-                tempCard.setCardFace(currentLine[0].substring(1));
-                tempCard.setCardPoint(Integer.parseInt(currentLine[1]));
-                unDistributedDeck.add(tempCard);
-            }
-        }catch (Exception e){
-            System.out.println("Path couldn't found");
-        }
 
         //*Oyuncularımız oluşturuyoruz ilk versiyonda sadece 4 oynucu ve manuel oluşturuyoruz
         HumanPlayer human = new HumanPlayer("Hasan");
@@ -69,6 +54,8 @@ public class Main {
         playerList.add(bot3);
 
         playerList.get(0).setBoardCardRef(boardDeck);
+
+
         Collections.shuffle(unDistributedDeck);
 
         //*Yere 4 tane kart açıyoruz
@@ -130,10 +117,16 @@ public class Main {
     public static void printRound(){
         //Bütün bir roundu yazdırmak için olan kod
         System.out.println("-------------------ROUND "+ round +" ----- STEP "+ stepEachRound + "-------------------");
-        System.out.print("Bot1(" + printDeck(playerList.get(1).handCards) + ")  " +
-                         "Bot2(" + printDeck(playerList.get(2).handCards) + ")  " +
-                         "Bot3(" + printDeck(playerList.get(3).handCards) + ")");
-        System.out.println("");
+        String printBotsHand = "";
+        for (int i = 1; i < numberOfPlayer; i++) {
+            printBotsHand += playerList.get(i).getName() + "(" + printDeck(playerList.get(i).handCards) + ")   ";
+        }
+
+        //System.out.print("Bot1(" + printDeck(playerList.get(1).handCards) + ")  " +
+        //                 "Bot2(" + printDeck(playerList.get(2).handCards) + ")  " +
+        //                 "Bot3(" + printDeck(playerList.get(3).handCards) + ")");
+
+        System.out.println(printBotsHand);
         System.out.println("");
 
         System.out.println("Board("+(printDeck(boardDeck)+")"));
@@ -172,6 +165,45 @@ public class Main {
         System.out.println(temp);
     }
 
+    private static void readCardValuesText(){
+        //Reading txt file that created before by hand
+        try {
+            File scoreText = new File("src\\CardValues.txt");
+            Scanner sc = new Scanner(scoreText);
+
+            while (sc.hasNextLine()){
+                //Creating unDistributedDeck based on CardValues.txt
+                String[] currentLine = sc.nextLine().split(" ");
+                Card tempCard = new Card();
+                tempCard.setSuit(currentLine[0].substring(0,1));
+                tempCard.setCardFace(currentLine[0].substring(1));
+                tempCard.setCardPoint(Integer.parseInt(currentLine[1]));
+                unDistributedDeck.add(tempCard);
+            }
+        }catch (Exception e){
+            System.out.println("Path couldn't found. It must be in the src file. Please try again.");
+            readCardValuesText();
+        }
+    }
+
+    private static void askHowManyPlayersWillPlay(){
+        System.out.println("How many player will play? Enter number: 2, 3 or 4");
+        Scanner sc = new Scanner(System.in);
+        while (true){
+            try {
+                int enteredNumber = Integer.parseInt(sc.nextLine());
+                if (!(enteredNumber <= 4 && enteredNumber >=2)){
+                    System.out.println("Please enter 'just' 2, 3 or 4");
+                    continue;
+                }
+
+                numberOfPlayer = enteredNumber;
+                break;
+            }catch (Exception e){
+                System.out.println("Please enter just number: 2, 3 or 4");
+            }
+        }
+    }
 }
 
 

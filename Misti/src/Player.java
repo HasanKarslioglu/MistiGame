@@ -1,4 +1,3 @@
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
@@ -12,7 +11,7 @@ public abstract class Player {
     static protected Random rnd = new Random();
 
     //Oyuncuların kartları tahtaya atması için tahtanın referansı lazım bunu da oyunun başında setliyoruz
-    static protected ArrayList<Card> boardCardRef = new ArrayList<>();
+    static protected ArrayList<Card> boardCardRef;
 
     //-----------VARIABLES------------
     private String name;
