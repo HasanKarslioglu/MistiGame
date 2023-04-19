@@ -95,14 +95,7 @@ public class Main {
         //2. oyuncu insan mı bot mu seçtikten sonra adı ne
         //eğer bir defa bile insan seçilmişse bir daha o seçenek çıkmayacak diğerleri otomatik bot olacak ama adını ve
         //zorluk derecesini soracağız
-        
-        
-        
-        
-        
-        
-        
-        //Cut yapılacak(Bunu baştan yazcaz sanırım (eğer öyle bir metod yoksa))
+
         //Tek tek bütün oyuncuların adı ve zorluk derecesi girilecek
     }
 
