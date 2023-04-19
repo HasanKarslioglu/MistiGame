@@ -192,28 +192,29 @@ public class Main {
     }
 
     public static void Cut() {
-		Scanner scanner =new Scanner(System.in);
-	
+		//cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyor
+    	//kart numarasına göre for döngüsüne alınıyor her 0.cart remove olduğunda, 1.kart döngü sonunda 0.karta atanıyor 
+    	//Ondan dolayı her seferinde 0.kartı remove ediyoruz sonrada sondan boşalan indexlere yerleştiriyoruz.
+    	Scanner scanner =new Scanner(System.in);
 		System.out.println("Where do you want to cut the deck?");
 		int cutCard=scanner.nextInt();//4
-		Card[] tempCard=new Card[cutCard];
+		Card tempCard;
 
 		for(int i=0;i<cutCard;i++) {
-			 tempCard[i]=unDistributedDeck.get(Math.round((i-1)/2));
-			 unDistributedDeck.remove(Math.round((i-1)/2));
-			
-		}
-		System.out.println("unDistributedDeck size right now:"+unDistributedDeck.size());
-		for(Card card : tempCard) {
-			System.out.print(card.getCardString()+"|");
-		}System.out.println("");
-	for(int i=0;i<cutCard;i++) {
-     unDistributedDeck.add(unDistributedDeck.size(), tempCard[i]);		
-	}
-}
+			 tempCard=unDistributedDeck.get(0);
+			 unDistributedDeck.remove(0);
+			 unDistributedDeck.add(unDistributedDeck.size(), tempCard);
+		}System.out.println("Cutted Deck:");
+        for(int i=0;i<unDistributedDeck.size();i++) {
+        	System.out.print(unDistributedDeck.get(i).getCardString()+" ");
+	
+         }
+     }
+		
+
+     }
 
 
 
 
-}
 
