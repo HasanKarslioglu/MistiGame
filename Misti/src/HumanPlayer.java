@@ -23,7 +23,7 @@ public class HumanPlayer extends Player {
                 System.out.println("Please enter a 'number' 1 to " + getHandCards().size());
                 continue;
             }
-            if (chooseInt >= getHandCards().size()){
+            if (chooseInt >= getHandCards().size() || chooseInt < 0){
                 System.out.println("Please enter just enter 1 to " + getHandCards().size());
                 continue;
             }

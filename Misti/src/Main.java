@@ -11,10 +11,10 @@ public class Main {
     //*Dağıtılmamış kartlar
     private static ArrayList<Card> unDistributedDeck = new ArrayList<>();
     //*Round her bir turda artcak
-    static private int round = 0;
+    static private int round = 1;
 
     //*Bu ilerde eklencek her turda biri kart attığında step artacak
-    //static private int stepEachRound = 0;
+    static private int stepEachRound = 0;
 
 
     //*Player listesi(add veya remove yapmayacağımız için dümdüz array kullandım arraylist yerine)
@@ -58,9 +58,9 @@ public class Main {
 
         //*Oyuncularımız oluşturuyoruz ilk versiyonda sadece 4 oynucu ve manuel oluşturuyoruz
         HumanPlayer human = new HumanPlayer("Hasan");
-        ComputerPlayer bot1 = new ComputerPlayer("Bot 1");
-        ComputerPlayer bot2 = new ComputerPlayer("Bot 2");
-        ComputerPlayer bot3 = new ComputerPlayer("Bot 3");
+        RegularBot bot1 = new RegularBot("Bot 1");
+        RegularBot bot2 = new RegularBot("Bot 2");
+        RegularBot bot3 = new RegularBot("Bot 3");
 
         //*Oyuncularımızı player listemize ekliyoruz
         playerList.add(human);
@@ -129,7 +129,7 @@ public class Main {
 
     public static void printRound(){
         //Bütün bir roundu yazdırmak için olan kod
-        System.out.println("-----------------ROUND "+ round +"------------------------");
+        System.out.println("-------------------ROUND "+ round +" ----- STEP "+ stepEachRound + "-------------------");
         System.out.print("Bot1(" + printDeck(playerList.get(1).handCards) + ")  " +
                          "Bot2(" + printDeck(playerList.get(2).handCards) + ")  " +
                          "Bot3(" + printDeck(playerList.get(3).handCards) + ")");
