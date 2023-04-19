@@ -1,8 +1,13 @@
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.awt.FocusTraversalPolicy;
 import java.io.File;
 import java.util.Scanner;
+
+import javax.swing.text.DefaultEditorKit.CutAction;
+import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 public class Main {
 
@@ -59,7 +64,10 @@ public class Main {
       //---------SHUFFLE-----------
         Collections.shuffle(unDistributedDeck);
         //Collections methodlarından direkt shuffle'ı kart destesi için kullandık
-        
+        printUnDistributedDeck();
+        //---------CUT-----------
+        Cut();
+        printUnDistributedDeck();
         
         
         //*Oyuncularımız oluşturuyoruz ilk versiyonda sadece 4 oynucu ve manuel oluşturuyoruz
@@ -183,10 +191,29 @@ public class Main {
         System.out.println(temp);
     }
 
+    public static void Cut() {
+		Scanner scanner =new Scanner(System.in);
+	
+		System.out.println("Where do you want to cut the deck?");
+		int cutCard=scanner.nextInt();//4
+		Card[] tempCard=new Card[cutCard];
+
+		for(int i=0;i<cutCard;i++) {
+			 tempCard[i]=unDistributedDeck.get(Math.round((i-1)/2));
+			 unDistributedDeck.remove(Math.round((i-1)/2));
+			
+		}
+		System.out.println("unDistributedDeck size right now:"+unDistributedDeck.size());
+		for(Card card : tempCard) {
+			System.out.print(card.getCardString()+"|");
+		}System.out.println("");
+	for(int i=0;i<cutCard;i++) {
+     unDistributedDeck.add(unDistributedDeck.size(), tempCard[i]);		
+	}
 }
 
 
 
 
-
+}
 
