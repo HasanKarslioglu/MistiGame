@@ -148,7 +148,7 @@ public class Main {
     private static String printDeck(ArrayList<Card> list){
         String temp = "";
         for (int i = 0; i < list.size(); i++) {
-            temp += list.get(i).getCardString();
+            temp += list.get(i).getCardString()+" ";
         }
         return temp;
     }
@@ -165,7 +165,7 @@ public class Main {
     private static void printUnDistributedDeck(){
         String temp = "UnDistributedDeck:";
         for (int i = 0; i < unDistributedDeck.size(); i++) {
-            temp += unDistributedDeck.get(i).getCardString();
+            temp += unDistributedDeck.get(i).getCardString()+" ";
         }
         System.out.println(temp);
     }
