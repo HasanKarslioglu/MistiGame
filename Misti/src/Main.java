@@ -66,7 +66,7 @@ public class Main {
         //Collections methodlarından direkt shuffle'ı kart destesi için kullandık
         printUnDistributedDeck();
         //---------CUT-----------
-        Cut();
+        cut();
         printUnDistributedDeck();
         
         
@@ -184,7 +184,7 @@ public class Main {
         System.out.println(temp);
     }
 
-    public static void Cut() {
+    public static void cut() {
 		//cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyor
     	//kart numarasına göre for döngüsüne alınıyor her 0.cart remove olduğunda, 1.kart döngü sonunda 0.karta atanıyor 
     	//Ondan dolayı her seferinde 0.kartı remove ediyoruz sonrada sondan boşalan indexlere yerleştiriyoruz.
