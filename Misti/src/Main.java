@@ -39,6 +39,7 @@ public class Main {
 
         readCardValuesText();
         askHowManyPlayersWillPlay();
+        askNamesAndLevels();
 
 
         //*Oyuncularımız oluşturuyoruz ilk versiyonda sadece 4 oynucu ve manuel oluşturuyoruz
@@ -47,11 +48,11 @@ public class Main {
         RegularBot bot2 = new RegularBot("Bot 2");
         RegularBot bot3 = new RegularBot("Bot 3");
 
-        //*Oyuncularımızı player listemize ekliyoruz
-        playerList.add(human);
-        playerList.add(bot1);
-        playerList.add(bot2);
-        playerList.add(bot3);
+        //Oyuncularımızı player listemize ekliyoruz
+        //playerList.add(human);
+        //playerList.add(bot1);
+        //playerList.add(bot2);
+        //playerList.add(bot3);
 
         playerList.get(0).setBoardCardRef(boardDeck);
 
@@ -114,17 +115,16 @@ public class Main {
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
     }
 
-    public static void printRound(){
+
+
+    private static void printRound(){
         //Bütün bir roundu yazdırmak için olan kod
         System.out.println("-------------------ROUND "+ round +" ----- STEP "+ stepEachRound + "-------------------");
+
         String printBotsHand = "";
         for (int i = 1; i < numberOfPlayer; i++) {
             printBotsHand += playerList.get(i).getName() + "(" + printDeck(playerList.get(i).handCards) + ")   ";
         }
-
-        //System.out.print("Bot1(" + printDeck(playerList.get(1).handCards) + ")  " +
-        //                 "Bot2(" + printDeck(playerList.get(2).handCards) + ")  " +
-        //                 "Bot3(" + printDeck(playerList.get(3).handCards) + ")");
 
         System.out.println(printBotsHand);
         System.out.println("");
@@ -174,10 +174,12 @@ public class Main {
             while (sc.hasNextLine()){
                 //Creating unDistributedDeck based on CardValues.txt
                 String[] currentLine = sc.nextLine().split(" ");
+
                 Card tempCard = new Card();
                 tempCard.setSuit(currentLine[0].substring(0,1));
                 tempCard.setCardFace(currentLine[0].substring(1));
                 tempCard.setCardPoint(Integer.parseInt(currentLine[1]));
+
                 unDistributedDeck.add(tempCard);
             }
         }catch (Exception e){
@@ -202,6 +204,47 @@ public class Main {
             }catch (Exception e){
                 System.out.println("Please enter just number: 2, 3 or 4");
             }
+        }
+    }
+
+    private static void askNamesAndLevels(){
+        System.out.println("Enter your name");
+        Scanner sc = new Scanner(System.in);
+
+        String name = sc.nextLine().trim();
+        playerList.add(new HumanPlayer(name));
+
+        for (int i = 0; i < numberOfPlayer - 1; i++) {
+            System.out.println("What will be "+ (i+1) + ". computer name?");
+            name = sc.nextLine().trim();
+            int level;
+            System.out.println("What will be " + name + "' level?");
+            System.out.println("Enter 1 for novice bot, 2 for regular bot, 3 for expert bot");
+            while (true){
+                try{
+                    String levelStr = sc.nextLine().trim();
+                    level = Integer.parseInt(levelStr);
+                    if (level >= 1 && level <= 3) break;
+
+                    System.out.println("You entered invalid number. Just 1, 2 or 3 will be accepted.");
+                }catch (Exception e){
+                    System.out.println("Please enter 'just number' like 1, 2 or 3");
+                }
+            }
+            playerList.add(createBot(level, name));
+            System.out.println(playerList.get(i+1).getName()+" Added successfully. It level is "+ playerList.get(i+1).getClass().getSimpleName());
+        }
+    }
+
+    private static Player createBot(int level, String name){
+        switch (level){
+            case 1:
+                return new NoviceBot(name);
+            case 2:
+                return new RegularBot(name);
+            default:
+                System.out.println("Couldn't generate bot");
+                return null;
         }
     }
 }
