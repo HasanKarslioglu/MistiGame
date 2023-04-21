@@ -5,15 +5,9 @@ import java.util.Random;
 
 public abstract class Player {
 
-    //Bu scanner ve randomu ana classta yani player'da bir defa ve static olavak şekilde ürettim.Bu
-    //Sayede bütün alt sınıfları aynı scanner ve randomu kullanacak birden fazla üretilmiş olamayacak
-    static protected Scanner sc = new Scanner(System.in);
-    static protected Random rnd = new Random();
-
-    //Oyuncuların kartları tahtaya atması için tahtanın referansı lazım bunu da oyunun başında setliyoruz
-    static protected ArrayList<Card> boardCardRef;
-
     //-----------VARIABLES------------
+    static protected ArrayList<Card> boardCardRef;
+    static protected Random rnd = new Random();
     private String name;
     private int score;
     protected ArrayList<Card> handCards = new ArrayList<>();

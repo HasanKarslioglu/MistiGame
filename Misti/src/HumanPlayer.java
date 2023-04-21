@@ -1,10 +1,12 @@
-public class HumanPlayer extends Player {
+import java.util.Scanner;
 
+public class HumanPlayer extends Player {
 
     //-----------CONSTRUCTORS------------
     public HumanPlayer(String name){
         super(name);
     }
+    static protected Scanner sc = new Scanner(System.in);
 
 
     //-----------METHODS------------

@@ -6,14 +6,16 @@ import java.util.Scanner;
 public class Main {
 
 
-    //*Tahtanın eli
+    //Board cards
     private static ArrayList<Card> boardDeck = new ArrayList<>();
-    //*Dağıtılmamış kartlar
+
+    //Undistributed cards which has 52 card in the beginning of the game
     private static ArrayList<Card> unDistributedDeck = new ArrayList<>();
-    //*Round her bir turda artcak
+
+    //It increases at the end of each round
     static private int round = 1;
 
-    //*Bu ilerde eklencek her turda biri kart attığında step artacak
+    //It increases after each player plays
     static private int stepEachRound = 0;
 
 
@@ -55,7 +57,6 @@ public class Main {
         //playerList.add(bot3);
 
         playerList.get(0).setBoardCardRef(boardDeck);
-
 
         Collections.shuffle(unDistributedDeck);
 
@@ -208,15 +209,31 @@ public class Main {
     }
 
     private static void askNamesAndLevels(){
-        System.out.println("Enter your name");
         Scanner sc = new Scanner(System.in);
 
-        String name = sc.nextLine().trim();
-        playerList.add(new HumanPlayer(name));
+        int numberOfBots = numberOfPlayer;
+        System.out.println("Will there be a human player in the game? type 'y' for yes 'n' for no");
+        while(true){
+            String yesNo = sc.nextLine().trim();
+            if (yesNo.equalsIgnoreCase("y")){
+                System.out.println("What will be human player name?");
+                String name = sc.nextLine().trim();
+                playerList.add(0, new HumanPlayer(name));
+                System.out.println("Human added successfully");
+                numberOfBots--;
+                break;
+            }else if(yesNo.equalsIgnoreCase("n")){
+                break;
+            }else{
+                System.out.println("You entered invalid word. Please just type 'y' for yes 'n' for no");
+            }
+        }
 
-        for (int i = 0; i < numberOfPlayer - 1; i++) {
-            System.out.println("What will be "+ (i+1) + ". computer name?");
-            name = sc.nextLine().trim();
+        for (int i = 0; i < numberOfBots; i++) {
+
+            System.out.println("What will be "+ (i+1) + ". bot name?");
+            String name = sc.nextLine().trim();
+
             int level;
             System.out.println("What will be " + name + "' level?");
             System.out.println("Enter 1 for novice bot, 2 for regular bot, 3 for expert bot");
@@ -232,7 +249,7 @@ public class Main {
                 }
             }
             playerList.add(createBot(level, name));
-            System.out.println(playerList.get(i+1).getName()+" Added successfully. It level is "+ playerList.get(i+1).getClass().getSimpleName());
+            System.out.println(playerList.get(playerList.size()-1).getName()+" Added successfully. It level is "+ playerList.get(playerList.size()-1).getClass().getSimpleName());
         }
     }
 
