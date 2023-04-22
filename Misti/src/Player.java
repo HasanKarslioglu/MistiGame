@@ -11,7 +11,7 @@ public abstract class Player {
     static protected Random rnd = new Random();
 
     //Oyuncuların kartları tahtaya atması için tahtanın referansı lazım bunu da oyunun başında setliyoruz
-    static protected ArrayList<Card> boardCardRef = new ArrayList<>();
+    static protected ArrayList<Card> boardCardRef;
 
     //-----------VARIABLES------------
     private String name;
@@ -27,7 +27,25 @@ public abstract class Player {
 
     //-----------METHODS------------
     //Her alt classın kendine ait bir play mekaniği olacak o yüzden bu abstract
-    public abstract void playCard();
+    public void playCard(){
+        //ÇOK ÖNEMLİ!!!!!!!!!!!!!!
+        //ÖNCE Alt sınıfların playcardı çalışcak en son super.playCard() ı çalıştırınca buradaki fonksiyon çalışcak
+        //Bu sayede kart seçimi ve oynanması olduktan sonra burada, boarddeckin son iki kartı aynı ise kartlar toplanacak
+
+        if (isCollectable())
+        {
+            System.out.println(getName() + " Took all cards");
+            collectedCards.addAll(boardCardRef);
+            boardCardRef.clear();
+        }
+        //TODO Calculate player score!!!
+    };
+
+    private boolean isCollectable(){
+        return ((boardCardRef.size() > 1) &&
+                ((boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals(boardCardRef.get(boardCardRef.size() - 2).getCardFace()))
+                || (boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals("J"))));
+    }
 
 
     //-----------GETTERS------------
