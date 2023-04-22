@@ -176,7 +176,7 @@ public class Main {
     }
 
     public static void cut() {
-        
+
         /*cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyor
         try catch ile girilen değeri kontrol ediyoruz
          sonra list referansli iki tane arraylist oluştuyoruz firsthalf ve secondhalf olarak
@@ -198,8 +198,8 @@ public class Main {
             }
         }
 
-        List<Card> firstHalf = new ArrayList<>(unDistributedDeck.subList(0,cutcard));
-        List<Card> secondHalf = new ArrayList<>(unDistributedDeck.subList(cutcard,unDistributedDeck.size()));
+        List<Card> firstHalf = new ArrayList<>(unDistributedDeck.subList(0, cutcard));
+        List<Card> secondHalf = new ArrayList<>(unDistributedDeck.subList(cutcard, unDistributedDeck.size()));
         unDistributedDeck.clear();
         unDistributedDeck.addAll(secondHalf);
         unDistributedDeck.addAll(firstHalf);
@@ -207,7 +207,7 @@ public class Main {
         for (int i = 0; i < unDistributedDeck.size(); i++) {
             System.out.print(unDistributedDeck.get(i).getCardString() + " ");
         }
-
+    }
     private static void readCardValuesText(){
         //Reading txt file that created before by hand
         try {
@@ -293,11 +293,7 @@ public class Main {
 }
 
 
-    }
-
-
-}
-
+  
 
 
 
