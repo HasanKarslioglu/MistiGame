@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -58,7 +59,9 @@ public class Main {
 
 
         Collections.shuffle(unDistributedDeck);
-
+        //---------CUT-----------
+        cut();
+        printUnDistributedDeck();
         //*Yere 4 tane kart açıyoruz
         for (int i = 0; i < 4; i++) {
             boardDeck.add(unDistributedDeck.remove(unDistributedDeck.size() - 1));
@@ -236,6 +239,39 @@ public class Main {
         }
     }
 
+
+    public static void cut() {
+        //cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyoz
+        //try catch ile girilen değeri kontrol ediyoruz
+        // sonra list referansli iki tane arraylist oluştuyoruz firsthalf ve secondhalf olarak
+        //arraylistlerin içine sublist methoduyla ilk karttan kesilen karta, ve kesilen karttan son karta deckler oluşyor
+        //sonrasında undistrbuteddeck'i clear methoduyla boşaltıyoruz ve addlist methodunu öce secondhalf sonrada firsthalf ile kullanıyoruz ve method tamamlanmış oluyor
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Where do you want to cut the deck?");
+        int cutcard;
+        while (true) {
+            try {
+                cutcard = Integer.parseInt(scanner.nextLine());
+                if (!(cutcard > 0 && cutcard < 52)) {
+                    System.out.println("please choose a card from card 0 to card 52");
+                    continue;
+                }
+                break;
+            } catch (Exception e) {
+                System.out.println("Please enter a valid value");
+            }
+        }
+        List<Card> firstHalf = new ArrayList<>(unDistributedDeck.subList(0,cutcard));
+        List<Card> secondHalf = new ArrayList<>(unDistributedDeck.subList(cutcard,unDistributedDeck.size()));
+        unDistributedDeck.clear();
+        unDistributedDeck.addAll(secondHalf);
+        unDistributedDeck.addAll(firstHalf);
+        System.out.println("Cutted Deck:");
+        for (int i = 0; i < unDistributedDeck.size(); i++) {
+            System.out.print(unDistributedDeck.get(i).getCardString() + " ");
+        }
+    }
+
     private static Player createBot(int level, String name){
         switch (level){
             case 1:
@@ -248,9 +284,3 @@ public class Main {
         }
     }
 }
-
-
-
-
-
-
