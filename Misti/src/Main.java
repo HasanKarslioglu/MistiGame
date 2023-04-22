@@ -1,7 +1,11 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.io.File;
+import java.util.List;
 import java.util.Collections;
 import java.util.Scanner;
+
+
 
 public class Main {
 
@@ -33,13 +37,22 @@ public class Main {
         endGame();
     }
 
-    public static void initializeGame(){
+    public static void initializeGame() {
 
         //BUNU KULLANICIYA SORACAĞIZ şu anlık 2 3 veya 4 için çalışıyo
 
         readCardValuesText();
         askHowManyPlayersWillPlay();
         askNamesAndLevels();
+
+
+        //---------SHUFFLE-----------
+        Collections.shuffle(unDistributedDeck);
+        //Collections methodlarından direkt shuffle'ı kart destesi için kullandık
+        printUnDistributedDeck();
+        //---------CUT-----------
+        cut();
+        printUnDistributedDeck();
 
 
         //*Oyuncularımız oluşturuyoruz ilk versiyonda sadece 4 oynucu ve manuel oluşturuyoruz
@@ -70,12 +83,11 @@ public class Main {
         //2. oyuncu insan mı bot mu seçtikten sonra adı ne
         //eğer bir defa bile insan seçilmişse bir daha o seçenek çıkmayacak diğerleri otomatik bot olacak ama adını ve
         //zorluk derecesini soracağız
-        //Kartlar Shuffle yapılacak(Kendi metodumuzu yazmayacaz hazır metodları kullancaz)
-        //Cut yapılacak(Bunu baştan yazcaz sanırım (eğer öyle bir metod yoksa))
+
         //Tek tek bütün oyuncuların adı ve zorluk derecesi girilecek
     }
 
-    public static void loopGame(){
+    public static void loopGame() {
 
         printUnDistributedDeck();
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
@@ -93,7 +105,6 @@ public class Main {
         }
 
 
-
         //ROund arttırılıyor
         round++;
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
@@ -109,13 +120,11 @@ public class Main {
         //Kart kalmamışsa loop game bitecek end game başlayacak.
     }
 
-    public static void endGame(){
+    public static void endGame() {
         //Oyun sonu yerde kalan kartlar son kazanana verilecek
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
     }
-
-
 
     private static void printRound(){
         //Bütün bir roundu yazdırmak için olan kod
@@ -127,12 +136,13 @@ public class Main {
         }
 
         System.out.println(printBotsHand);
+
         System.out.println("");
 
-        System.out.println("Board("+(printDeck(boardDeck)+")"));
+        System.out.println("Board(" + (printDeck(boardDeck) + ")"));
         System.out.println("");
 
-        System.out.println("MyHand("+printDeck(playerList.get(0).handCards)+")");
+        System.out.println("MyHand(" + printDeck(playerList.get(0).handCards) + ")");
         System.out.println("----------------------------------------------------------");
         //TO DO ilerde buna mod ekleyip eğer onu seçtiysek rakibin eli ve dağıtılmamış deste gösterilecek
         //Ya da ikisi de gizli olacak şeklinde ayarlayacağız. Şu an test aşamasında bu yüzden her şeyi gizlemeden
@@ -140,30 +150,62 @@ public class Main {
     }
 
     //Bir tane desteyi yazdırmak için olan yardımcı fonksiyon
-    private static String printDeck(ArrayList<Card> list){
+    private static String printDeck(ArrayList<Card> list) {
         String temp = "";
         for (int i = 0; i < list.size(); i++) {
-            temp += list.get(i).getCardString();
+            temp += list.get(i).getCardString() + " ";
         }
         return temp;
     }
 
     //Kartları dağıtan fonksiyon
-    private static void dealCards(Player player){
+    private static void dealCards(Player player) {
         for (int i = 0; i < 4; i++) {
-            player.getHandCards().add(unDistributedDeck.remove(unDistributedDeck.size()-1));
+            player.getHandCards().add(unDistributedDeck.remove(unDistributedDeck.size() - 1));
         }
     }
 
 
     //Henüz dağıtılmamış olan ya da bir kısmı dağıtılmış olan ana destemizi yazdırıyor
-    private static void printUnDistributedDeck(){
+    private static void printUnDistributedDeck() {
         String temp = "UnDistributedDeck:";
         for (int i = 0; i < unDistributedDeck.size(); i++) {
-            temp += unDistributedDeck.get(i).getCardString();
+            temp += unDistributedDeck.get(i).getCardString() + " ";
         }
         System.out.println(temp);
     }
+
+    public static void cut() {
+        //cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyor
+        //try catch ile girilen değeri kontrol ediyoruz
+        // sonra list referansli iki tane arraylist oluştuyoruz firsthalf ve secondhalf olarak
+        //arraylistlerin içine sublist methoduyla ilk karttan kesilen karta, ve kesilen karttan son karta deckler oluşyor
+        //sonrasında undistrbuteddeck'i clear methoduyla boşaltıyoruz ve addlist methodunu öce secondhalf sonrada firsthalf ile kullanıyoruz ve method tamamlanmış oluyor
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Where do you want to cut the deck?");
+        int cutcard;
+        while (true) {
+            try {
+                cutcard = Integer.parseInt(scanner.nextLine());
+                if (!(cutcard > 0 && cutcard < 52)) {
+                    System.out.println("please choose a card from card 0 to card 52");
+                    continue;
+                }
+                break;
+            } catch (Exception e) {
+                System.out.println("Please enter a valid value");
+            }
+        }
+
+        List<Card> firstHalf = new ArrayList<>(unDistributedDeck.subList(0,cutcard));
+        List<Card> secondHalf = new ArrayList<>(unDistributedDeck.subList(cutcard,unDistributedDeck.size()));
+        unDistributedDeck.clear();
+        unDistributedDeck.addAll(secondHalf);
+        unDistributedDeck.addAll(firstHalf);
+        System.out.println("Cutted Deck:");
+        for (int i = 0; i < unDistributedDeck.size(); i++) {
+            System.out.print(unDistributedDeck.get(i).getCardString() + " ");
+        }
 
     private static void readCardValuesText(){
         //Reading txt file that created before by hand
@@ -249,6 +291,11 @@ public class Main {
     }
 }
 
+
+    }
+
+
+}
 
 
 
