@@ -1,13 +1,10 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.awt.FocusTraversalPolicy;
 import java.io.File;
+import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.text.DefaultEditorKit.CutAction;
-import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 
 public class Main {
 
@@ -39,7 +36,7 @@ public class Main {
         endGame();
     }
 
-    public static void initializeGame(){
+    public static void initializeGame() {
 
         //BUNU KULLANICIYA SORACAĞIZ şu anlık 2 3 veya 4 için çalışıyo
         numberOfPlayer = 4;
@@ -49,27 +46,27 @@ public class Main {
             File scoreText = new File("src\\CardValues.txt");
             Scanner sc = new Scanner(scoreText);
 
-            while (sc.hasNextLine()){
+            while (sc.hasNextLine()) {
                 //Creating unDistributedDeck based on CardValues.txt
                 String[] currentLine = sc.nextLine().split(" ");
                 Card tempCard = new Card();
-                tempCard.setSuit(currentLine[0].substring(0,1));
+                tempCard.setSuit(currentLine[0].substring(0, 1));
                 tempCard.setCardFace(currentLine[0].substring(1));
                 tempCard.setCardPoint(Integer.parseInt(currentLine[1]));
                 unDistributedDeck.add(tempCard);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Path couldn't found");
         }
-      //---------SHUFFLE-----------
+        //---------SHUFFLE-----------
         Collections.shuffle(unDistributedDeck);
         //Collections methodlarından direkt shuffle'ı kart destesi için kullandık
         printUnDistributedDeck();
         //---------CUT-----------
         cut();
         printUnDistributedDeck();
-        
-        
+
+
         //*Oyuncularımız oluşturuyoruz ilk versiyonda sadece 4 oynucu ve manuel oluşturuyoruz
         HumanPlayer human = new HumanPlayer("Hasan");
         ComputerPlayer bot1 = new ComputerPlayer("Bot 1");
@@ -99,7 +96,7 @@ public class Main {
         //Tek tek bütün oyuncuların adı ve zorluk derecesi girilecek
     }
 
-    public static void loopGame(){
+    public static void loopGame() {
 
         printUnDistributedDeck();
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
@@ -117,7 +114,6 @@ public class Main {
         }
 
 
-
         //ROund arttırılıyor
         round++;
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
@@ -133,25 +129,25 @@ public class Main {
         //Kart kalmamışsa loop game bitecek end game başlayacak.
     }
 
-    public static void endGame(){
+    public static void endGame() {
         //Oyun sonu yerde kalan kartlar son kazanana verilecek
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
     }
 
-    public static void printRound(){
+    public static void printRound() {
         //Bütün bir roundu yazdırmak için olan kod
-        System.out.println("-----------------ROUND "+ round +"------------------------");
+        System.out.println("-----------------ROUND " + round + "------------------------");
         System.out.print("Bot1(" + printDeck(playerList.get(1).handCards) + ")  " +
-                         "Bot2(" + printDeck(playerList.get(2).handCards) + ")  " +
-                         "Bot3(" + printDeck(playerList.get(3).handCards) + ")");
+                "Bot2(" + printDeck(playerList.get(2).handCards) + ")  " +
+                "Bot3(" + printDeck(playerList.get(3).handCards) + ")");
         System.out.println("");
         System.out.println("");
 
-        System.out.println("Board("+(printDeck(boardDeck)+")"));
+        System.out.println("Board(" + (printDeck(boardDeck) + ")"));
         System.out.println("");
 
-        System.out.println("MyHand("+printDeck(playerList.get(0).handCards)+")");
+        System.out.println("MyHand(" + printDeck(playerList.get(0).handCards) + ")");
         System.out.println("----------------------------------------------------------");
         //TO DO ilerde buna mod ekleyip eğer onu seçtiysek rakibin eli ve dağıtılmamış deste gösterilecek
         //Ya da ikisi de gizli olacak şeklinde ayarlayacağız. Şu an test aşamasında bu yüzden her şeyi gizlemeden
@@ -159,53 +155,64 @@ public class Main {
     }
 
     //Bir tane desteyi yazdırmak için olan yardımcı fonksiyon
-    private static String printDeck(ArrayList<Card> list){
+    private static String printDeck(ArrayList<Card> list) {
         String temp = "";
         for (int i = 0; i < list.size(); i++) {
-            temp += list.get(i).getCardString()+" ";
+            temp += list.get(i).getCardString() + " ";
         }
         return temp;
     }
 
     //Kartları dağıtan fonksiyon
-    private static void dealCards(Player player){
+    private static void dealCards(Player player) {
         for (int i = 0; i < 4; i++) {
-            player.getHandCards().add(unDistributedDeck.remove(unDistributedDeck.size()-1));
+            player.getHandCards().add(unDistributedDeck.remove(unDistributedDeck.size() - 1));
         }
     }
 
 
     //Henüz dağıtılmamış olan ya da bir kısmı dağıtılmış olan ana destemizi yazdırıyor
-    private static void printUnDistributedDeck(){
+    private static void printUnDistributedDeck() {
         String temp = "UnDistributedDeck:";
         for (int i = 0; i < unDistributedDeck.size(); i++) {
-            temp += unDistributedDeck.get(i).getCardString()+" ";
+            temp += unDistributedDeck.get(i).getCardString() + " ";
         }
         System.out.println(temp);
     }
 
     public static void cut() {
-		//cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyor
-    	//kart numarasına göre for döngüsüne alınıyor her 0.cart remove olduğunda, 1.kart döngü sonunda 0.karta atanıyor 
-    	//Ondan dolayı her seferinde 0.kartı remove ediyoruz sonrada sondan boşalan indexlere yerleştiriyoruz.
-    	Scanner scanner =new Scanner(System.in);
-		System.out.println("Where do you want to cut the deck?");
-		int cutCard=scanner.nextInt();//4
-		Card tempCard;
+        //cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyor
+        //
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Where do you want to cut the deck?");
+        int cutcard;
+        while (true) {
+            try {
+                cutcard = Integer.parseInt(scanner.nextLine());
+                if (!(cutcard > 0 && cutcard < 52)) {
+                    System.out.println("please choose a card from card 0 to card 52");
+                    continue;
+                }
+                break;
+            } catch (Exception e) {
+                System.out.println("Please enter a valid value");
+            }
+        }
 
-		for(int i=0;i<cutCard;i++) {
-			 tempCard=unDistributedDeck.get(0);
-			 unDistributedDeck.remove(0);
-			 unDistributedDeck.add(unDistributedDeck.size(), tempCard);
-		}System.out.println("Cutted Deck:");
-        for(int i=0;i<unDistributedDeck.size();i++) {
-        	System.out.print(unDistributedDeck.get(i).getCardString()+" ");
-	
-         }
-     }
-		
+        List<Card> firstHalf = new ArrayList<>(unDistributedDeck.subList(0,cutcard));
+        List<Card> secondHalf = new ArrayList<>(unDistributedDeck.subList(cutcard,unDistributedDeck.size()));
+        unDistributedDeck.clear();
+        unDistributedDeck.addAll(secondHalf);
+        unDistributedDeck.addAll(firstHalf);
+        System.out.println("Cutted Deck:");
+        for (int i = 0; i < unDistributedDeck.size(); i++) {
+            System.out.print(unDistributedDeck.get(i).getCardString() + " ");
+        }
 
-     }
+    }
+
+
+}
 
 
 
