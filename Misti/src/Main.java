@@ -176,11 +176,12 @@ public class Main {
     }
 
     public static void cut() {
-        //cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyor
-        //try catch ile girilen değeri kontrol ediyoruz
-        // sonra list referansli iki tane arraylist oluştuyoruz firsthalf ve secondhalf olarak
-        //arraylistlerin içine sublist methoduyla ilk karttan kesilen karta, ve kesilen karttan son karta deckler oluşyor
-        //sonrasında undistrbuteddeck'i clear methoduyla boşaltıyoruz ve addlist methodunu öce secondhalf sonrada firsthalf ile kullanıyoruz ve method tamamlanmış oluyor
+        
+        /*cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyor
+        try catch ile girilen değeri kontrol ediyoruz
+         sonra list referansli iki tane arraylist oluştuyoruz firsthalf ve secondhalf olarak
+        arraylistlerin içine sublist methoduyla ilk karttan kesilen karta, ve kesilen karttan son karta deckler oluşyor
+        sonrasında undistrbuteddeck'i clear methoduyla boşaltıyoruz ve addlist methodunu öce secondhalf sonrada firsthalf ile kullanıyoruz ve method tamamlanmış oluyor*/
         Scanner scanner = new Scanner(System.in);
         System.out.println("Where do you want to cut the deck?");
         int cutcard;
