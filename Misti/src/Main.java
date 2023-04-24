@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
+
 
 public class Main {
 
@@ -18,62 +22,61 @@ public class Main {
     //It increases after each player plays
     static private int stepEachRound = 0;
 
-
-    //*Player listesi(add veya remove yapmayacağımız için dümdüz array kullandım arraylist yerine)
     static private ArrayList<Player> playerList = new ArrayList<>();
 
+
+    //It will be assigned after the asking user by using askHowManyPlayersWillPlay() method
     static private int numberOfPlayer;
 
+    //Too many method will use this static scanner object
+    static private Scanner sc = new Scanner(System.in);
 
-    //*Main sadece 3 kısımdan oluşacak
+
+    //Main method is being operating with just 3 method
     public static void main(String[] args) {
-        //*Oyunun başında tek seferde gerçekleşecek işlemler için bu fonksiyon çağrılacak
+        //This function will be executed for one-time actions at the head of the game
         initializeGame();
-        //*Loop game sürekli kendini çağıracak
+        //This method will be executed for represent each round of the game
         loopGame();
-        //*Oyunun sonunda tek seferde gerçekleşecek işlemler için bu fonksiyon çağrılacak
+        //This function will be executed for one-time actions at the end of the game
         endGame();
     }
 
     public static void initializeGame(){
 
-        //BUNU KULLANICIYA SORACAĞIZ şu anlık 2 3 veya 4 için çalışıyo
+        //----------------------------------------------------------------------
+        //FOR TESTING
+                    readCardValuesText();
+                    numberOfPlayer = 4;
 
-        readCardValuesText();
-        askHowManyPlayersWillPlay();
-        askNamesAndLevels();
+                    HumanPlayer human = new HumanPlayer("Hasan");
+                    RegularBot bot1 = new RegularBot("Bot 1");
+                    RegularBot bot2 = new RegularBot("Bot 2");
+                    RegularBot bot3 = new RegularBot("Bot 3");
 
+                    playerList.add(human);
+                    playerList.add(bot1);
+                    playerList.add(bot2);
+                    playerList.add(bot3);
+        //FOR TESTING
+        //----------------------------------------------------------------------
 
-        //*Oyuncularımız oluşturuyoruz ilk versiyonda sadece 4 oynucu ve manuel oluşturuyoruz
-        HumanPlayer human = new HumanPlayer("Hasan");
-        RegularBot bot1 = new RegularBot("Bot 1");
-        RegularBot bot2 = new RegularBot("Bot 2");
-        RegularBot bot3 = new RegularBot("Bot 3");
+        //It asks path of the CardValues.txt file for points
+        //initializeDeckFromFilePath();
 
-        //Oyuncularımızı player listemize ekliyoruz
-        //playerList.add(human);
-        //playerList.add(bot1);
-        //playerList.add(bot2);
-        //playerList.add(bot3);
+        //It asks how many players will play the misti game.
+        //askHowManyPlayersWillPlay();
 
-        playerList.get(0).setBoardCardRef(boardDeck);
-
+        //It asks firstly, will be there any human player and his or her name.
+        //Then each computer's name and level.
+        //askNamesAndLevels();
+        Player.setBoardCardRef(boardDeck);
         Collections.shuffle(unDistributedDeck);
 
-        //*Yere 4 tane kart açıyoruz
-        for (int i = 0; i < 4; i++) {
-            boardDeck.add(unDistributedDeck.remove(unDistributedDeck.size() - 1));
-        }
+        //This method deals 4 cards to the ArrayList passed as its parameter.
+        //In this case it fills the board with 4 cards.
+        dealCards(boardDeck);
 
-        //TO DO
-        //Kullanıcıdan bilgiler alınacak(Kaç oyuncu oynayacak 2 mi 3 mü 4 mü)
-        //Bu belirtildikten sonra örneğin 3 kişi seçti, ilk oyuncu insan mı olacak bot mu seçtikten sonra adı ne
-        //2. oyuncu insan mı bot mu seçtikten sonra adı ne
-        //eğer bir defa bile insan seçilmişse bir daha o seçenek çıkmayacak diğerleri otomatik bot olacak ama adını ve
-        //zorluk derecesini soracağız
-        //Kartlar Shuffle yapılacak(Kendi metodumuzu yazmayacaz hazır metodları kullancaz)
-        //Cut yapılacak(Bunu baştan yazcaz sanırım (eğer öyle bir metod yoksa))
-        //Tek tek bütün oyuncuların adı ve zorluk derecesi girilecek
     }
 
     public static void loopGame(){
@@ -82,7 +85,7 @@ public class Main {
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
         //Her oyuncuya kartlar dağıtılıyor
         for (int i = 0; i < numberOfPlayer; i++) {
-            dealCards(playerList.get(i));
+            dealCards(playerList.get(i).getHandCards());
         }
         //Kartlar printleniyor
         printRound();
@@ -150,9 +153,9 @@ public class Main {
     }
 
     //Kartları dağıtan fonksiyon
-    private static void dealCards(Player player){
+    private static void dealCards(ArrayList<Card> cardList){
         for (int i = 0; i < 4; i++) {
-            player.getHandCards().add(unDistributedDeck.remove(unDistributedDeck.size()-1));
+            cardList.add(unDistributedDeck.remove(unDistributedDeck.size()-1));
         }
     }
 
@@ -170,11 +173,11 @@ public class Main {
         //Reading txt file that created before by hand
         try {
             File scoreText = new File("src\\CardValues.txt");
-            Scanner sc = new Scanner(scoreText);
+            Scanner scanText = new Scanner(scoreText);
 
-            while (sc.hasNextLine()){
+            while (scanText.hasNextLine()){
                 //Creating unDistributedDeck based on CardValues.txt
-                String[] currentLine = sc.nextLine().split(" ");
+                String[] currentLine = scanText.nextLine().split(" ");
 
                 Card tempCard = new Card();
                 tempCard.setSuit(currentLine[0].substring(0,1));
@@ -183,6 +186,7 @@ public class Main {
 
                 unDistributedDeck.add(tempCard);
             }
+
         }catch (Exception e){
             System.out.println("Path couldn't found. It must be in the src file. Please try again.");
             readCardValuesText();
@@ -190,39 +194,34 @@ public class Main {
     }
 
     private static void askHowManyPlayersWillPlay(){
-        System.out.println("How many player will play? Enter number: 2, 3 or 4");
-        Scanner sc = new Scanner(System.in);
-        while (true){
+        do {
             try {
-                int enteredNumber = Integer.parseInt(sc.nextLine());
-                if (!(enteredNumber <= 4 && enteredNumber >=2)){
+                //Scanning user input and converted to an integer and saved to numberOfPlayer
+                numberOfPlayer = Integer.parseInt(sc.nextLine());
+                //It checks whether the number is valid or invalid for us
+                if (numberOfPlayer < 2 || numberOfPlayer > 4) {
                     System.out.println("Please enter 'just' 2, 3 or 4");
-                    continue;
                 }
-
-                numberOfPlayer = enteredNumber;
-                break;
-            }catch (Exception e){
+            } catch (NumberFormatException e) {
                 System.out.println("Please enter just number: 2, 3 or 4");
             }
-        }
+        } while (numberOfPlayer < 2 || numberOfPlayer > 4);
     }
 
     private static void askNamesAndLevels(){
-        Scanner sc = new Scanner(System.in);
 
         int numberOfBots = numberOfPlayer;
         System.out.println("Will there be a human player in the game? type 'y' for yes 'n' for no");
         while(true){
-            String yesNo = sc.nextLine().trim();
-            if (yesNo.equalsIgnoreCase("y")){
+            String input = sc.nextLine().trim();
+            if (input.equalsIgnoreCase("y")){           //Checks whether the user's input corresponds to 'yes'
                 System.out.println("What will be human player name?");
                 String name = sc.nextLine().trim();
-                playerList.add(0, new HumanPlayer(name));
+                playerList.add(0, new HumanPlayer(name));        //Create new human player and add it to the player list
                 System.out.println("Human added successfully");
-                numberOfBots--;
+                numberOfBots--;          //If there is any human player number of bots must be equal to (totalplayer-1)
                 break;
-            }else if(yesNo.equalsIgnoreCase("n")){
+            }else if(input.equalsIgnoreCase("n")){      //Checks whether the user's input corresponds to 'no'
                 break;
             }else{
                 System.out.println("You entered invalid word. Please just type 'y' for yes 'n' for no");
@@ -237,22 +236,29 @@ public class Main {
             int level;
             System.out.println("What will be " + name + "' level?");
             System.out.println("Enter 1 for novice bot, 2 for regular bot, 3 for expert bot");
+
+            //Keep asking user for bot level until a valid input is entered
             while (true){
                 try{
                     String levelStr = sc.nextLine().trim();
                     level = Integer.parseInt(levelStr);
+                    //If level is valid loop must be ended
                     if (level >= 1 && level <= 3) break;
 
                     System.out.println("You entered invalid number. Just 1, 2 or 3 will be accepted.");
-                }catch (Exception e){
+                }catch (NumberFormatException e){
                     System.out.println("Please enter 'just number' like 1, 2 or 3");
                 }
             }
+
+            //Create new bot and add it to the player list
+            //And also this uses helper-method called createBot. Please refer to that method for more information.
             playerList.add(createBot(level, name));
             System.out.println(playerList.get(playerList.size()-1).getName()+" Added successfully. It level is "+ playerList.get(playerList.size()-1).getClass().getSimpleName());
         }
     }
 
+    //Creates a new bot with the given level and name then returns reference of that bot or null.
     private static Player createBot(int level, String name){
         switch (level){
             case 1:
@@ -262,6 +268,53 @@ public class Main {
             default:
                 System.out.println("Couldn't generate bot");
                 return null;
+        }
+    }
+
+    private static void initializeDeckFromFilePath(){
+
+        System.out.println("Please enter path of card values text");
+        Scanner scanText = null;
+        while(true){
+            try {
+                //Reading file path from command line
+                String filePath = sc.nextLine().trim();
+                File scoreText = new File(filePath);
+                System.out.println("Path founded successfully.");
+                //Creating scanner that will scan CardValues.txt
+                scanText = new Scanner(scoreText);
+
+                while (scanText.hasNextLine()){
+                    //Creating unDistributedDeck based on CardValues.txt
+                    String[] currentLine = scanText.nextLine().split(" ");
+
+                    //It checks is there any error while reading each line
+                    if (currentLine.length != 2) {
+                        System.out.println("Invalid line in card values file: " + Arrays.toString(currentLine));
+                        continue;
+                    }
+
+                    //Creating empty card that will be filled based on each line of CardValues.txt
+                    Card tempCard = new Card();
+                    //Filling card suit
+                    tempCard.setSuit(currentLine[0].substring(0,1));
+                    //Filling card face
+                    tempCard.setCardFace(currentLine[0].substring(1));
+                    //Filling card point
+                    tempCard.setCardPoint(Integer.parseInt(currentLine[1]));
+
+                    unDistributedDeck.add(tempCard);
+                }
+                break;
+
+            }catch (FileNotFoundException e){
+                System.out.println("Path couldn't found. It must be in the src file. Please try again.");
+            }catch (IOException e) {
+                System.out.println("Error reading file. Please try again.");
+            }finally {
+                if (scanText != null)
+                    scanText.close();
+            }
         }
     }
 }

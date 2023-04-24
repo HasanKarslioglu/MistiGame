@@ -53,5 +53,5 @@ public abstract class Player {
     public void setScore(int score) {this.score = score;}
     public void setHandCards(ArrayList<Card> handCards) {this.handCards = handCards;}
     public void setCollectedCards(ArrayList<Card> collectedCards) {this.collectedCards = collectedCards;}
-    public void setBoardCardRef(ArrayList<Card> boardCard) {this.boardCardRef = boardCard;}
+    public static void setBoardCardRef(ArrayList<Card> boardCard) {boardCardRef = boardCard;}
 }
