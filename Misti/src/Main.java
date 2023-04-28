@@ -13,6 +13,8 @@ public class Main {
 
     //*Bu ilerde eklencek her turda biri kart attığında step artacak
     static private int stepEachRound = 0;
+    //Boardtaki kartları en son hangi oyuncunun toplandığını kontrol edicek. Bellekte az yer kaplaması için referansı, byte olarak tanımladık.
+    private static byte lastCollector;
 
 
     //*Player listesi(add veya remove yapmayacağımız için dümdüz array kullandım arraylist yerine)
@@ -80,6 +82,7 @@ public class Main {
         printUnDistributedDeck();
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
         //Her oyuncuya kartlar dağıtılıyor
+        //Eğer oyuncu boarddan kart aldıysa tanımlanan değişken, oyuncunun playerlist'teki sırasına eşitleniyor.
         for (int i = 0; i < numberOfPlayer; i++) {
             dealCards(playerList.get(i));
         }
@@ -88,7 +91,12 @@ public class Main {
         for (int j = 0; j < 4; j++) {
             for (int i = 0; i < numberOfPlayer; i++) {
                 playerList.get(i).playCard();
+                stepEachRound++;
+              if(boardDeck.isEmpty()){
+                  lastCollector=(byte)i;
+              }
                 printRound();
+
             }
         }
 
@@ -96,10 +104,12 @@ public class Main {
 
         //ROund arttırılıyor
         round++;
-        //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
-        if (unDistributedDeck.size() != 0)
-            loopGame();
 
+        //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
+        if (unDistributedDeck.size() != 0) {
+            stepEachRound = 0;
+            loopGame();
+        }
         //To do bu fonksiyonun son hali şöyle görünmeli
         //Kartlar dağıtılacak herkese aynı anda sonra bütün eller printlenecek
         //Sıra bizdeyse biz kart seçip atıcaz
@@ -113,6 +123,15 @@ public class Main {
         //Oyun sonu yerde kalan kartlar son kazanana verilecek
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
+        System.out.println("------------END OF THE GAME------------");
+        if(boardDeck.size()!=0){
+            playerList.get(lastCollector).getCollectedCards().addAll(boardDeck);
+            System.out.println(playerList.get(lastCollector)+" took the last cards on the board.");
+        }
+
+
+
+
     }
 
 
