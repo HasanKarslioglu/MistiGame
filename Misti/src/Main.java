@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Scanner;
 
 
@@ -31,6 +29,11 @@ public class Main {
     //Too many method will use this static scanner object
     static private Scanner sc = new Scanner(System.in);
 
+    static private final String[] suits = {"♠","♣","♥","♦"};
+    static private final String[] cardFaces = {"A","2","3","4","5","6","7",
+                                               "8","9","10","J","Q","K"};
+
+
 
     //Main method is being operating with just 3 method
     public static void main(String[] args) {
@@ -39,14 +42,16 @@ public class Main {
         //This method will be executed for represent each round of the game
         loopGame();
         //This function will be executed for one-time actions at the end of the game
-        endGame();
+        //endGame();
     }
 
     public static void initializeGame(){
 
         //----------------------------------------------------------------------
         //FOR TESTING
-                    readCardValuesText();
+                    makeDeck();
+                    //initializeDeck();
+                    initializeDeckFromFilePath();
                     numberOfPlayer = 4;
 
                     HumanPlayer human = new HumanPlayer("Hasan");
@@ -58,6 +63,10 @@ public class Main {
                     playerList.add(bot1);
                     playerList.add(bot2);
                     playerList.add(bot3);
+
+        //Collections.shuffle(unDistributedDeck);
+
+
         //FOR TESTING
         //----------------------------------------------------------------------
 
@@ -71,7 +80,6 @@ public class Main {
         //Then each computer's name and level.
         //askNamesAndLevels();
         Player.setBoardCardRef(boardDeck);
-        Collections.shuffle(unDistributedDeck);
 
         //This method deals 4 cards to the ArrayList passed as its parameter.
         //In this case it fills the board with 4 cards.
@@ -88,6 +96,7 @@ public class Main {
             dealCards(playerList.get(i).getHandCards());
         }
         //Kartlar printleniyor
+
         printRound();
         for (int j = 0; j < 4; j++) {
             for (int i = 0; i < numberOfPlayer; i++) {
@@ -131,10 +140,10 @@ public class Main {
         }
 
         System.out.println(printBotsHand);
-        System.out.println("");
+        System.out.println();
 
         System.out.println("Board("+(printDeck(boardDeck)+")"));
-        System.out.println("");
+        System.out.println();
 
         System.out.println("MyHand("+printDeck(playerList.get(0).handCards)+")");
         System.out.println("----------------------------------------------------------");
@@ -167,30 +176,6 @@ public class Main {
             temp += unDistributedDeck.get(i).getCardString();
         }
         System.out.println(temp);
-    }
-
-    private static void readCardValuesText(){
-        //Reading txt file that created before by hand
-        try {
-            File scoreText = new File("src\\CardValues.txt");
-            Scanner scanText = new Scanner(scoreText);
-
-            while (scanText.hasNextLine()){
-                //Creating unDistributedDeck based on CardValues.txt
-                String[] currentLine = scanText.nextLine().split(" ");
-
-                Card tempCard = new Card();
-                tempCard.setSuit(currentLine[0].substring(0,1));
-                tempCard.setCardFace(currentLine[0].substring(1));
-                tempCard.setCardPoint(Integer.parseInt(currentLine[1]));
-
-                unDistributedDeck.add(tempCard);
-            }
-
-        }catch (Exception e){
-            System.out.println("Path couldn't found. It must be in the src file. Please try again.");
-            readCardValuesText();
-        }
     }
 
     private static void askHowManyPlayersWillPlay(){
@@ -273,47 +258,140 @@ public class Main {
 
     private static void initializeDeckFromFilePath(){
 
+        //Lines going to be store each line of cardValues.txt except double star line
+        ArrayList<String> lines = new ArrayList<>();
+
         System.out.println("Please enter path of card values text");
         Scanner scanText = null;
+        //While loop asks path of txt file that contains card values
         while(true){
             try {
                 //Reading file path from command line
                 String filePath = sc.nextLine().trim();
                 File scoreText = new File(filePath);
-                System.out.println("Path founded successfully.");
                 //Creating scanner that will scan CardValues.txt
                 scanText = new Scanner(scoreText);
-
-                while (scanText.hasNextLine()){
-                    //Creating unDistributedDeck based on CardValues.txt
-                    String[] currentLine = scanText.nextLine().split(" ");
-
-                    //It checks is there any error while reading each line
-                    if (currentLine.length != 2) {
-                        System.out.println("Invalid line in card values file: " + Arrays.toString(currentLine));
-                        continue;
-                    }
-
-                    //Creating empty card that will be filled based on each line of CardValues.txt
-                    Card tempCard = new Card();
-                    //Filling card suit
-                    tempCard.setSuit(currentLine[0].substring(0,1));
-                    //Filling card face
-                    tempCard.setCardFace(currentLine[0].substring(1));
-                    //Filling card point
-                    tempCard.setCardPoint(Integer.parseInt(currentLine[1]));
-
-                    unDistributedDeck.add(tempCard);
-                }
+                System.out.println("Path founded successfully.");
                 break;
-
             }catch (FileNotFoundException e){
-                System.out.println("Path couldn't found. It must be in the src file. Please try again.");
+                System.out.println("Path couldn't found. Enter path of the your txt file. Please try again.");
             }catch (IOException e) {
                 System.out.println("Error reading file. Please try again.");
-            }finally {
-                if (scanText != null)
-                    scanText.close();
+            }
+        }
+
+        //Following while loop scanning txt file and storing to 'lines array' without double star
+        while (scanText.hasNextLine()){
+            String currentLine = scanText.nextLine();
+
+            //If a double star is found in any line of the txt file, all card
+            //values will be changed based on the double star value
+            if (currentLine.substring(0,2).equals("**")){
+                changeAllCardPoints(Integer.parseInt(currentLine.split(" ")[1]));
+            }else {
+                //Otherwise, the line will be stored in the lines array, which will be used to change other card values
+                lines.add(currentLine.trim());
+            }
+        }
+
+        if (scanText != null)
+                scanText.close();
+
+
+        //For each card in the undistributed deck
+        for (Card eachCard: unDistributedDeck) {
+
+            // Iterate over each line in the card values txt file
+            for (String eachLine : lines) {
+
+                //If the line starts with a "*", it means it contains
+                //a card face value and its corresponding point value
+                if (eachLine.substring(0,1).equals("*")){
+                    //If the current card face matches the face value in the line
+                    //Change the card point based on the point value in the line
+                    if (eachCard.getCardFace().equals(eachLine.split(" ")[0].substring(1))){
+                        changeCardPointBasedOnLine(eachLine, eachCard);
+                        break;
+                    }
+
+                //Otherwise, the line contains a suit value and its corresponding point value
+                }else {
+                    //If the current card suit matches the suit value in the line
+                    //Change the card point based on the point value in the line
+                    if (eachCard.getSuit().equals(eachLine.substring(0,1))){
+                        changeCardPointBasedOnLine(eachLine, eachCard);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+
+    //This helper-method takes a new point value and a card object, and sets the card point to the new point value
+    private static void changeCardPointBasedOnLine(String newPoint, Card card){
+        try{
+            card.setCardPoint(Integer.parseInt(newPoint.split(" ")[1]));
+        }catch (NumberFormatException e){
+            System.out.println("There were problems while reading card values txt file");
+            System.out.println("Please check your txt file, the format must be <suit><cardFace> <point>");
+        }
+    }
+
+    //THIS METHOD WILL BE USE FOR JUST TESTING!!!
+    private static void initializeDeck(){
+        ArrayList<String> lines = new ArrayList<>();
+
+        try {
+            File scoreText = new File("C:\\Users\\Hasan\\Desktop\\MistiGame\\Misti\\src\\CardValues.txt");
+            Scanner scanText = new Scanner(scoreText);
+            while (scanText.hasNextLine()){
+                String currentLine = scanText.nextLine();
+                if (currentLine.substring(0,2).equals("**")){
+                    changeAllCardPoints(Integer.parseInt(currentLine.split(" ")[1]));
+                }else {
+                    lines.add(currentLine.trim());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            for (Card eachCard: unDistributedDeck) {
+                for (String eachLine : lines) {
+                    if (eachLine.substring(0,1).equals("*")){
+                        if (eachCard.getCardFace().equals(eachLine.split(" ")[0].substring(1))){
+                            eachCard.setCardPoint(Integer.parseInt(eachLine.split(" ")[1]));
+                            break;
+                        }
+                    }else {
+                        if (eachCard.getSuit().equals(eachLine.substring(0,1))){
+                            eachCard.setCardPoint(Integer.parseInt(eachLine.split(" ")[1]));
+                            break;
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void changeAllCardPoints(int newPoint){
+        for(Card each : unDistributedDeck){
+            each.setCardPoint(newPoint);
+        }
+    }
+    private static void makeDeck(){
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 13; j++) {
+                Card tempCard = new Card();
+                tempCard.setSuit(suits[i]);
+                tempCard.setCardFace(cardFaces[j]);
+                tempCard.setCardPoint(0);
+                unDistributedDeck.add(tempCard);
             }
         }
     }
