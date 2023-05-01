@@ -16,7 +16,7 @@ public class Main {
 
     //*Bu ilerde eklencek her turda biri kart attığında step artacak
     static private int stepEachRound = 0;
-    //Boardtaki kartları en son hangi oyuncunun toplandığını kontrol edicek. Bellekte az yer kaplaması için referansı, byte olarak tanımladık.
+    //The cards on the board will check which player was collected last. We defined the reference in bytes to take up little memory.
     private static byte lastCollector;
 
 
@@ -63,7 +63,7 @@ public class Main {
         Collections.shuffle(unDistributedDeck);
         //---------CUT-----------
         cut();
-     //   printUnDistributedDeck(); cut methodu desteyi bastırıyor zaten
+     //   printUnDistributedDeck(); The cut method is already suppressing the deck.
         //*Yere 4 tane kart açıyoruz
         for (int i = 0; i < 4; i++) {
             boardDeck.add(unDistributedDeck.remove(unDistributedDeck.size() - 1));
