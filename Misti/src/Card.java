@@ -10,7 +10,8 @@ public class Card {
         //# means empty card
         suit = "#";
         cardFace = "#";
-        cardPoint = 0;
+        //Default value is 1 based on project description
+        cardPoint = 1;
     }
 
     //-----------METHODS------------
