@@ -3,7 +3,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-
+import java.util.Random;
 public class Main {
 
 
@@ -16,6 +16,8 @@ public class Main {
 
     //*Bu ilerde eklencek her turda biri kart attığında step artacak
     static private int stepEachRound = 0;
+    //The cards on the board will check which player was collected last. We defined the reference in bytes to take up little memory.
+    private static byte lastCollector;
 
 
     //*Player listesi(add veya remove yapmayacağımız için dümdüz array kullandım arraylist yerine)
@@ -61,7 +63,7 @@ public class Main {
         Collections.shuffle(unDistributedDeck);
         //---------CUT-----------
         cut();
-        printUnDistributedDeck();
+     //   printUnDistributedDeck(); The cut method is already suppressing the deck.
         //*Yere 4 tane kart açıyoruz
         for (int i = 0; i < 4; i++) {
             boardDeck.add(unDistributedDeck.remove(unDistributedDeck.size() - 1));
@@ -83,6 +85,7 @@ public class Main {
         printUnDistributedDeck();
         //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
         //Her oyuncuya kartlar dağıtılıyor
+        //Eğer oyuncu boarddan kart aldıysa tanımlanan değişken, oyuncunun playerlist'teki sırasına eşitleniyor.
         for (int i = 0; i < numberOfPlayer; i++) {
             dealCards(playerList.get(i));
         }
@@ -91,7 +94,12 @@ public class Main {
         for (int j = 0; j < 4; j++) {
             for (int i = 0; i < numberOfPlayer; i++) {
                 playerList.get(i).playCard();
+                stepEachRound++;
+              if(boardDeck.isEmpty()){
+                  lastCollector=(byte)i;
+              }
                 printRound();
+
             }
         }
 
@@ -99,10 +107,12 @@ public class Main {
 
         //ROund arttırılıyor
         round++;
-        //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
-        if (unDistributedDeck.size() != 0)
-            loopGame();
 
+        //Oyun bitene kadar roundlar şeklinde loopa giriyor bu fonksiyon
+        if (unDistributedDeck.size() != 0) {
+            stepEachRound = 0;
+            loopGame();
+        }
         //To do bu fonksiyonun son hali şöyle görünmeli
         //Kartlar dağıtılacak herkese aynı anda sonra bütün eller printlenecek
         //Sıra bizdeyse biz kart seçip atıcaz
@@ -116,6 +126,15 @@ public class Main {
         //Oyun sonu yerde kalan kartlar son kazanana verilecek
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
+        System.out.println("------------END OF THE GAME------------");
+        if(boardDeck.size()!=0){
+            playerList.get(lastCollector).getCollectedCards().addAll(boardDeck);
+            System.out.println(playerList.get(lastCollector)+" took the last cards on the board.");
+        }
+
+
+
+
     }
 
 
@@ -241,32 +260,19 @@ public class Main {
 
 
     public static void cut() {
-        //cut methodunda insan oyuncu desteninin kaçıncı karttan kesileceğini seçiyoz
-        //try catch ile girilen değeri kontrol ediyoruz
-        // sonra list referansli iki tane arraylist oluştuyoruz firsthalf ve secondhalf olarak
-        //arraylistlerin içine sublist methoduyla ilk karttan kesilen karta, ve kesilen karttan son karta deckler oluşyor
-        //sonrasında undistrbuteddeck'i clear methoduyla boşaltıyoruz ve addlist methodunu öce secondhalf sonrada firsthalf ile kullanıyoruz ve method tamamlanmış oluyor
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Where do you want to cut the deck?");
-        int cutcard;
-        while (true) {
-            try {
-                cutcard = Integer.parseInt(scanner.nextLine());
-                if (!(cutcard > 0 && cutcard < 52)) {
-                    System.out.println("please choose a card from card 0 to card 52");
-                    continue;
-                }
-                break;
-            } catch (Exception e) {
-                System.out.println("Please enter a valid value");
-            }
-        }
-        List<Card> firstHalf = new ArrayList<>(unDistributedDeck.subList(0,cutcard));
-        List<Card> secondHalf = new ArrayList<>(unDistributedDeck.subList(cutcard,unDistributedDeck.size()));
-        unDistributedDeck.clear();
-        unDistributedDeck.addAll(secondHalf);
-        unDistributedDeck.addAll(firstHalf);
-        System.out.println("Cutted Deck:");
+        //bu methodta bilgisayar randomla destenin kesileceği kartı seciyor tempdeck arraylisti ile undistributeddecki
+        // ortadan kesilen destesi başa geçiyor
+
+        Random random=new Random();
+        int cutcard=random.nextInt(50)+2;//cutcard will be choosen between 2. and 51. cards. So random will be select number 0-49
+                                               //when we add 2 cutcard will be initilaze between 2-51
+        System.out.println("Computer cut the deck from "+cutcard+" .card");
+
+       List<Card>tempdeck=new ArrayList<>(unDistributedDeck.subList(cutcard,unDistributedDeck.size()));
+       tempdeck.addAll(unDistributedDeck.subList(0,cutcard));
+       unDistributedDeck.clear();
+       unDistributedDeck.addAll(tempdeck);
+        System.out.println("The cutted deck: ");
         for (int i = 0; i < unDistributedDeck.size(); i++) {
             System.out.print(unDistributedDeck.get(i).getCardString() + " ");
         }
