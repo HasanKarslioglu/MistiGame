@@ -6,11 +6,13 @@ public class RegularBot extends ComputerPlayer{
     @Override
     public void playCard() {
 
+
         int indexOfMatchingCard = isThereMatchingCard();
         int indexOfJokerCard = isThereJoker();
 
         if (indexOfMatchingCard != -1){
-            choose = indexOfMatchingCard;
+            simulatePlayCard();
+
         }else if(indexOfJokerCard != -1 && boardCardRef.size() > 0) {
             choose = indexOfJokerCard;
         }
@@ -37,4 +39,23 @@ public class RegularBot extends ComputerPlayer{
         //-1 means there is no matching with last board card
         return -1;
     }
+
+    private int simulatePlayCard(){
+        int maxPoint=0;
+            for (int i = 0; i < getHandCards().size(); i++) {
+                if (i == isThereMatchingCard()) {
+                    if(getHandCards().get(i).getCardPoint()>maxPoint){
+                        maxPoint = getHandCards().get(i).getCardPoint();
+                        choose=i;
+                    }
+
+                }
+
+            }
+            return choose;
+
+    }
+
+
+
 }
