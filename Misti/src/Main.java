@@ -33,7 +33,7 @@ public class Main {
         //This method will be executed for represent each round of the game
         loopGame();
         //This function will be executed for one-time actions at the end of the game
-        //endGame();
+        endGame();
     }
 
     public static void initializeGame(){
@@ -119,6 +119,7 @@ public class Main {
     }
 
     public static void endGame(){
+    	Top10List.top10Func();
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
         
@@ -174,6 +175,9 @@ public class Main {
             temp += unDistributedDeck.get(i).getCardString();
         }
         System.out.println(temp);
+    }
+    public static ArrayList<Player> getPlayerList(){
+    	return playerList;
     }
 
     public static void setNumberOfPlayer(int newNumberOfPlayer) {numberOfPlayer = newNumberOfPlayer;}
