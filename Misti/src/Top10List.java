@@ -8,11 +8,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class Top10List {
+	public static ArrayList<Player> playerList;
+	public Top10List(Main playerList) {
+      this.playerList = Main.getPlayerList();
+  }
 	public static void top10Func() {
 		String fileName = "Top10List.txt";
         File file = new File(fileName);
         ArrayList<String> topPlayers = new ArrayList<>();
-        ArrayList<Player> playerList = new ArrayList<>();
         Collections.sort(playerList, new ScoreComparator());
         int highestScore = Integer.MIN_VALUE;
         Player highestScorePlayer = null;
@@ -33,7 +36,7 @@ public class Top10List {
                 try {
                 	String tempPlayer = highestScorePlayer.getName() + " "  + Integer.toString(highestScorePlayer.getScore());
                 	topPlayers.add(tempPlayer);
-					
+
 				} catch (Exception e) {
 				}
                 //String tempPlayer = highestScorePlayer.getName() + " "  + Integer.toString(highestScorePlayer.getScore());
@@ -56,11 +59,11 @@ public class Top10List {
                 }
                 bufferedReader.close();
                 fileReader.close();
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
+
         } else {
         	try {
                     file.createNewFile();
@@ -70,7 +73,7 @@ public class Top10List {
                 System.out.println("An error occurred while creaiting to file: " + e.getMessage());
             }
         }
-            
+
     }
 }
 class ScoreComparator implements Comparator<Player> {

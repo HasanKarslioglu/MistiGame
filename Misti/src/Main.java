@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -23,7 +24,7 @@ public class Main {
     static private ArrayList<Player> playerList = new ArrayList<>();
 
 
-    //It will be assigned after the asking user by using askHowManyPlayersWillPlay() method
+    //It will be assigned after the asking user by using askHowManyPlayersWillPlay() methodC:\Users\samet\Documents\GitHub\MistiGame\Misti\src\CardValues.txt
     static private int numberOfPlayer;
 
     //Main method is being operating with just 3 method
