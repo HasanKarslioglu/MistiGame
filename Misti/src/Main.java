@@ -260,8 +260,8 @@ public class Main {
         // ortadan kesilen destesi başa geçiyor
 
         Random random=new Random();
-        int cutcard=random.nextInt(50)+2;//cutcard will be choosen between 2. and 51. cards. So random will be select number 0-49
-                                               //when we add 2 cutcard will be initilaze between 2-51
+        int cutcard=random.nextInt(50)+1;//cutcard will be choosen between 2. and 51. cards. So random will be select number 0-49
+                                               //when we add 2 cutcard will be initilaze between 1-50
         System.out.println("Computer cut the deck from "+cutcard+" .card");
 
        List<Card>tempdeck=new ArrayList<>(unDistributedDeck.subList(cutcard,unDistributedDeck.size()));
