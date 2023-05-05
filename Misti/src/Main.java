@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -120,6 +119,7 @@ public class Main {
     }
 
     public static void endGame(){
+    	Top10List.setPlayerList(playerList);
     	Top10List.top10Func();
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz

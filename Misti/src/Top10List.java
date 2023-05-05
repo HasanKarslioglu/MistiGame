@@ -2,16 +2,23 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Scanner;
 
 public class Top10List {
 	public static ArrayList<Player> playerList;
 	public Top10List(Main playerList) {
-      this.playerList = Main.getPlayerList();
+      Top10List.playerList = Main.getPlayerList();
   }
+	// SETTER FOR playerList
+	public static void setPlayerList(ArrayList<Player> newList) {
+		Top10List.playerList = newList;
+	} 
 	public static void top10Func() {
 		String fileName = "Top10List.txt";
         File file = new File(fileName);
@@ -39,32 +46,59 @@ public class Top10List {
 
 				} catch (Exception e) {
 				}
-                //String tempPlayer = highestScorePlayer.getName() + " "  + Integer.toString(highestScorePlayer.getScore());
-                //topPlayers.add(tempPlayer);
                 ArrayList<String> playerNames = new ArrayList<String>();
                 ArrayList<Integer> playerScores = new ArrayList<Integer>();
                 for (String player : topPlayers) {
                     String[] tokens = player.split(" ");
                     playerNames.add(tokens[0]);
-                    playerScores.add(Integer.parseInt(tokens[1]));
+                    //playerScores.add(Integer.parseInt(tokens[1]));
+                    try {
+                        int score = Integer.parseInt(tokens[1]);
+                        playerScores.add(score);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid score: " + tokens[1]);
+                    }
                 }
-                Collections.sort(playerScores, Comparator.reverseOrder());
-                for (Integer score : playerScores) {
-                    int index = playerScores.indexOf(score);
-                    try (FileWriter writer = new FileWriter(file,true)) {
-                    	writer.write(playerNames.get(index) + "  " + score);
+                Collections.sort(playerScores,Comparator.reverseOrder());
+                Scanner okuyucu = new Scanner(file);
+                boolean satirinSonu = false;
+                FileWriter writer = new FileWriter(file,true);
+                BufferedWriter bufWriter = new BufferedWriter(writer);
+                while (okuyucu.hasNextLine()) {
+                    String satir = okuyucu.nextLine();
+                    if (satir.endsWith("\n") || satir.endsWith("\r\n")) {
+                        satirinSonu = true;
+                    } else {
+                        satirinSonu = false;
+                    }
+                }
+                // Bir önceki satırın sonuna gelinmemişse yeni bir satır başlatıyoruz
+                if (!satirinSonu) {
+                    bufWriter.newLine();
+                }
+                for (int i = 0; i < playerScores.size(); i++) {
+                    int score = playerScores.get(i);
+                    String playerName = playerNames.get(i);
+                    try {
+                        bufWriter.write(playerName + " " + score + "\n");
                     } catch (Exception e) {
                         System.out.println("An error occurred while writing to file: " + e.getMessage());
                     }
                 }
+
+                
                 bufferedReader.close();
                 fileReader.close();
+                bufWriter.close();
+                
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        } else {
+        } 
+        //If the Top10List.txt file does not exist, this line will create the file 
+        else {
         	try {
                     file.createNewFile();
                     top10Func();
