@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -12,6 +13,7 @@ public abstract class Player {
     private int score;
     protected ArrayList<Card> handCards = new ArrayList<>();
     protected ArrayList<Card> collectedCards = new ArrayList<>();
+    protected int choosedCard = 0;
 
     //-----------CONSTRUCTORS------------
     public Player(String name){
@@ -27,6 +29,10 @@ public abstract class Player {
         //Bu sayede kart seçimi ve oynanması olduktan sonra burada, boarddeckin son iki kartı aynı ise kartlar toplanacak
 
 
+        System.out.println(getName() +" played " + getHandCards().get(choosedCard).getCardString());
+        boardCardRef.add(getHandCards().remove(choosedCard));
+
+
         if (isCollectable())
         {
             System.out.println(getName() + " Took all cards");
@@ -37,7 +43,7 @@ public abstract class Player {
 
 
     };
-
+   
     private boolean isCollectable(){
         return ((boardCardRef.size() > 1) &&
                 ((boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals(boardCardRef.get(boardCardRef.size() - 2).getCardFace()))

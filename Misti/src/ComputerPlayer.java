@@ -25,12 +25,5 @@ public class ComputerPlayer extends Player {
     }
 
     //-----------METHODS------------
-    @Override
-    public void playCard() {
 
-        System.out.println(getName() +" played " + getHandCards().get(choose).getCardString());
-        boardCardRef.add(getHandCards().remove(choose));
-        super.playCard();
-        choose = 0;
-    }
 }

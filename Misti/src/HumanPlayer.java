@@ -29,9 +29,6 @@ public class HumanPlayer extends Player {
                 System.out.println("Please enter just enter 1 to " + getHandCards().size());
                 continue;
             }
-
-            System.out.println(getName() +" played " + getHandCards().get(chooseInt).getCardString());
-            boardCardRef.add(getHandCards().remove(chooseInt));
             break;
         }
 
