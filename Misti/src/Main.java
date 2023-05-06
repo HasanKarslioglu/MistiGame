@@ -85,10 +85,6 @@ public class Main {
         //askNamesAndLevels();
         Player.setBoardCardRef(boardDeck);
 
-        //This method deals 4 cards to the ArrayList passed as its parameter.
-        //In this case it fills the board with 4 cards.
-        dealCards(boardDeck);
-        
         //---------SHUFFLE-----------
         Collections.shuffle(unDistributedDeck);
         
@@ -97,6 +93,9 @@ public class Main {
         cut();
         //printUnDistributedDeck();
 
+        //This method deals 4 cards to the ArrayList passed as its parameter.
+        //In this case it fills the board with 4 cards.
+        dealCards(boardDeck);
 
     }
 
