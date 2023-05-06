@@ -36,9 +36,11 @@ public class Top10List {
         	try {
                 FileReader fileReader = new FileReader("Top10List.txt");
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
+                ArrayList<String> oldPlayers = new ArrayList<>();
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                    topPlayers.add(line.trim());
+                   oldPlayers.add(line.trim());
                 }
                 try {
                 	String tempPlayer = highestScorePlayer.getName() + " "  + Integer.toString(highestScorePlayer.getScore());
@@ -46,8 +48,8 @@ public class Top10List {
 
 				} catch (Exception e) {
 				}
-                ArrayList<String> playerNames = new ArrayList<String>();
-                ArrayList<Integer> playerScores = new ArrayList<Integer>();
+                ArrayList<String> playerNames = new ArrayList<>();
+                ArrayList<Integer> playerScores = new ArrayList<>();
                 for (String player : topPlayers) {
                     String[] tokens = player.split(" ");
                     playerNames.add(tokens[0]);
@@ -60,6 +62,14 @@ public class Top10List {
                     }
                 }
                 Collections.sort(playerScores,Comparator.reverseOrder());
+             // playerNames arraylistini sıralama öncesi bir kopyasını oluştur
+                ArrayList<String> sortedPlayerNames = new ArrayList<>(playerNames);
+
+                // playerNames arraylistini, playerScores'a göre sırala
+                for (int i = 0; i < playerScores.size(); i++) {
+                    int index = sortedPlayerNames.indexOf(playerNames.get(i)); // ismin bulunduğu indeksi al
+                    playerNames.set(i, sortedPlayerNames.get(index)); // yeni sıraya göre ismi güncelle
+                }
                 Scanner okuyucu = new Scanner(file);
                 boolean satirinSonu = false;
                 FileWriter writer = new FileWriter(file,true);
@@ -80,7 +90,11 @@ public class Top10List {
                     int score = playerScores.get(i);
                     String playerName = playerNames.get(i);
                     try {
-                        bufWriter.write(playerName + " " + score + "\n");
+                        if (!oldPlayers.contains(playerName)) {
+                        	bufWriter.write(playerName + " " + score + "\n");
+                        } else {
+                            System.out.println(playerName + " adlı oyuncu daha önce kaydedilmiş, bu oyuncu atlanıyor.");
+                        }
                     } catch (Exception e) {
                         System.out.println("An error occurred while writing to file: " + e.getMessage());
                     }
@@ -97,7 +111,7 @@ public class Top10List {
             }
 
         } 
-        //If the Top10List.txt file does not exist, this line will create the file 
+        //If the Top10List.txt file does not exist, this else line will create the file 
         else {
         	try {
                     file.createNewFile();
@@ -110,8 +124,10 @@ public class Top10List {
 
     }
 }
-class ScoreComparator implements Comparator<Player> {
+//Helper class for the ScoreComparator
+ class ScoreComparator implements Comparator<Player> {
     public int compare(Player p1, Player p2) {
         return Integer.compare(p1.getScore(), p2.getScore());
     }
 }
+ 
