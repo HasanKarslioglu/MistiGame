@@ -73,16 +73,19 @@ public class Main {
         //Then each computer's name and level.
         GameMode.askNamesAndLevels();
 
-        //This method deals 4 cards to the ArrayList passed as its parameter.
-        //In this case it fills the board with 4 cards.
-        dealCards(boardDeck);
-        
         //---------SHUFFLE-----------
         Collections.shuffle(unDistributedDeck);
         
         //---------CUT-----------
         //The cut method is already suppressing the deck.
-        GameMode.cut();
+        
+        cut();
+        //printUnDistributedDeck();
+
+        //This method deals 4 cards to the ArrayList passed as its parameter.
+        //In this case it fills the board with 4 cards.
+        dealCards(boardDeck);
+
     }
 
     public static void loopGame(){
@@ -175,7 +178,4 @@ public class Main {
         }
         System.out.println(temp);
     }
-
-    public static void setNumberOfPlayer(int newNumberOfPlayer) {numberOfPlayer = newNumberOfPlayer;}
-    public static int getNumberOfPlayer(){return numberOfPlayer;}
 }
