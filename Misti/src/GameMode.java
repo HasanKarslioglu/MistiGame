@@ -11,22 +11,26 @@ public class GameMode {
     static private final String[] cardFaces = {"A","2","3","4","5","6","7",
             "8","9","10","J","Q","K"};
 
+    //These references will be filled in the main. Thanks to this, GameMode class
+    //will be able to reach playerList
     private static ArrayList<Card> unDistributedDeckRef;
     private static ArrayList<Player> playerList;
     static private Scanner sc = new Scanner(System.in);
 
-    public static void makeDeck(){
+    public static void createDeck(){
 
+        // Generates a deck of cards by iterating through each suit and card face.
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 13; j++) {
                 Card tempCard = new Card();
                 tempCard.setSuit(suits[i]);
                 tempCard.setCardFace(cardFaces[j]);
-                tempCard.setCardPoint(0);
+                //Each card's points will be changed after the calling initializeDeckFromFilePath()
                 unDistributedDeckRef.add(tempCard);
             }
         }
     }
+
     public static void initializeDeckFromFilePath(){
         //Lines going to be store each line of cardValues.txt except double star line
         ArrayList<String> lines = new ArrayList<>();
@@ -97,6 +101,7 @@ public class GameMode {
         }
     }
 
+    //This method uses by double star(**) in the card values text
     private static void changeAllCardPoints(int newPoint){
         for(Card each : unDistributedDeckRef){
             each.setCardPoint(newPoint);
@@ -136,6 +141,9 @@ public class GameMode {
 
     public static void askNamesAndLevels(){
 
+        //In the beginning of the asking, we don't know will be there any human
+        //That's why, we assume there won't be a human
+        //If there will be one, the number of bots decrease by one
         int numberOfBots = Main.getNumberOfPlayer();
         System.out.println("Will there be a human player in the game? type 'y' for yes 'n' for no");
         while(true){
@@ -156,9 +164,11 @@ public class GameMode {
 
         for (int i = 0; i < numberOfBots; i++) {
 
+            //Asking name of each bot
             System.out.println("What will be "+ (i+1) + ". bot name?");
             String name = sc.nextLine().trim();
 
+            //Asking level of each bot
             int level;
             System.out.println("What will be " + name + "' level?");
             System.out.println("Enter 1 for novice bot, 2 for regular bot, 3 for expert bot");
