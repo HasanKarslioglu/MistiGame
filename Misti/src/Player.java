@@ -44,7 +44,7 @@ public abstract class Player {
 
     };
    
-    private boolean isCollectable(){
+    protected boolean isCollectable(){
         return ((boardCardRef.size() > 1) &&
                 ((boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals(boardCardRef.get(boardCardRef.size() - 2).getCardFace()))
                 || (boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals("J"))));
