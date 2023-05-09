@@ -1,8 +1,0 @@
-Samet 10
-Hasan 18
-Eser 31
-
-Samet 31
-Hasan 18
-Eser 10
-Tolga 0

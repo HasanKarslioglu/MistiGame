@@ -11,18 +11,17 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 public class Top10List {
-	public static ArrayList<Player> playerList;
-	public Top10List(Main playerList) {
-      Top10List.playerList = Main.getPlayerList();
-  }
-	// SETTER FOR playerList
-	public static void setPlayerList(ArrayList<Player> newList) {
-		Top10List.playerList = newList;
-	} 
+	
+	//-----------VARIABLES------------
+	private static ArrayList<Player> playerList;
+    private static ArrayList<String> topPlayers = new ArrayList<>();
+    private static ArrayList<String> playerNames = new ArrayList<>();
+    private static ArrayList<Integer> playerScores = new ArrayList<>();
+	
+  //-----------METHODS------------
 	public static void top10Func() {
 		String fileName = "Top10List.txt";
         File file = new File(fileName);
-        ArrayList<String> topPlayers = new ArrayList<>();
         Collections.sort(playerList, new ScoreComparator());
         int highestScore = Integer.MIN_VALUE;
         Player highestScorePlayer = null;
@@ -36,95 +35,74 @@ public class Top10List {
         	try {
                 FileReader fileReader = new FileReader("Top10List.txt");
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
-                ArrayList<String> oldPlayers = new ArrayList<>();
                 String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                   topPlayers.add(line.trim());
-                   oldPlayers.add(line.trim());
-                }
+                while ((line = bufferedReader.readLine()) != null) {topPlayers.add(line.trim());}
                 try {
                 	String tempPlayer = highestScorePlayer.getName() + " "  + Integer.toString(highestScorePlayer.getScore());
                 	topPlayers.add(tempPlayer);
-
 				} catch (Exception e) {
-				}
-                ArrayList<String> playerNames = new ArrayList<>();
-                ArrayList<Integer> playerScores = new ArrayList<>();
-                for (String player : topPlayers) {
+					
+				} for (String player : topPlayers) {
                     String[] tokens = player.split(" ");
                     playerNames.add(tokens[0]);
-                    //playerScores.add(Integer.parseInt(tokens[1]));
                     try {
                         int score = Integer.parseInt(tokens[1]);
                         playerScores.add(score);
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid score: " + tokens[1]);
-                    }
-                }
-                Collections.sort(playerScores,Comparator.reverseOrder());
-             // playerNames arraylistini sıralama öncesi bir kopyasını oluştur
-                ArrayList<String> sortedPlayerNames = new ArrayList<>(playerNames);
+                    } catch (Exception e) {
+                    	
+                    	}
+                } // playerScores ve playerNames listelerini sıralama öncesi bir kopyalarını oluştur
+				ArrayList<Integer> sortedPlayerScores = new ArrayList<>(playerScores);
+				ArrayList<String> sortedPlayerNames = new ArrayList<>(playerNames);
+				// playerScores listesini, öğeleri ters sırayla sırala
+				Collections.sort(sortedPlayerScores, Comparator.reverseOrder());
 
-                // playerNames arraylistini, playerScores'a göre sırala
-                for (int i = 0; i < playerScores.size(); i++) {
-                    int index = sortedPlayerNames.indexOf(playerNames.get(i)); // ismin bulunduğu indeksi al
-                    playerNames.set(i, sortedPlayerNames.get(index)); // yeni sıraya göre ismi güncelle
-                }
+				// playerNames ve playerScores listelerini yeni sıraya göre güncelle
+				for (int i = 0; i < sortedPlayerScores.size(); i++) {
+				    try {
+				    	int index = playerScores.indexOf(sortedPlayerScores.get(i)); // skorun bulunduğu indeksi al
+					    playerScores.set(i, sortedPlayerScores.get(i)); // yeni sıraya göre skoru güncelle
+					    playerNames.set(i, sortedPlayerNames.get(index)); // yeni sıraya göre ismi güncelle
+					} catch (Exception e) {}
+				}
                 Scanner okuyucu = new Scanner(file);
                 boolean satirinSonu = false;
                 FileWriter writer = new FileWriter(file,true);
                 BufferedWriter bufWriter = new BufferedWriter(writer);
                 while (okuyucu.hasNextLine()) {
                     String satir = okuyucu.nextLine();
-                    if (satir.endsWith("\n") || satir.endsWith("\r\n")) {
-                        satirinSonu = true;
-                    } else {
-                        satirinSonu = false;
-                    }
+                    if (satir.endsWith("\n") || satir.endsWith("\r\n")) {} else {satirinSonu = false;}
                 }
                 // Bir önceki satırın sonuna gelinmemişse yeni bir satır başlatıyoruz
-                if (!satirinSonu) {
-                    bufWriter.newLine();
-                }
-                for (int i = 0; i < playerScores.size(); i++) {
+                if (!satirinSonu) {bufWriter.newLine();}
+                bufWriter.close();
+                FileWriter newWriter = new FileWriter(file);
+                for (int i = 0; i < Math.min(10, playerScores.size()); i++) {
                     int score = playerScores.get(i);
                     String playerName = playerNames.get(i);
                     try {
-                        if (!oldPlayers.contains(playerName)) {
-                        	bufWriter.write(playerName + " " + score + "\n");
-                        } else {
-                            System.out.println(playerName + " adlı oyuncu daha önce kaydedilmiş, bu oyuncu atlanıyor.");
-                        }
-                    } catch (Exception e) {
-                        System.out.println("An error occurred while writing to file: " + e.getMessage());
-                    }
+                    	if(okuyucu.hasNextLine()) {newWriter.write(playerName + " " + score + "\n");}
+                        else {newWriter.write(playerName + " " + score + "\n");}
+                    } catch (Exception e) {System.out.println("An error occurred while writing to file: " + e.getMessage());}
                 }
-
-                
                 bufferedReader.close();
                 fileReader.close();
-                bufWriter.close();
-                
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } 
-        //If the Top10List.txt file does not exist, this else line will create the file 
+                newWriter.close();
+                okuyucu.close();
+            } catch (Exception e) {e.printStackTrace();}
+        }
+        //If the Top10List.txt file does not exist, this else' line will create the file 
         else {
         	try {
                     file.createNewFile();
                     top10Func();
-
-            } catch (IOException e) {
-                System.out.println("An error occurred while creaiting to file: " + e.getMessage());
-            }
+            } catch (Exception e) {System.out.println("An error occurred while creaiting to file: " + e.getMessage());}
         }
-
     }
+	//-----------SETTERS------------
+		public static void setPlayerList(ArrayList<Player> newList) {Top10List.playerList = newList;} 
 }
-//Helper class for the ScoreComparator
+    //Helper class for the ScoreComparator
  class ScoreComparator implements Comparator<Player> {
     public int compare(Player p1, Player p2) {
         return Integer.compare(p1.getScore(), p2.getScore());
