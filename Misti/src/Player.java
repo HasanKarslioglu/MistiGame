@@ -46,7 +46,6 @@ public abstract class Player {
             calculatePlayerScore(boardCardRef);
             boardCardRef.clear();
         }
-        //TODO Calculate player score!!!
 
 
     };
