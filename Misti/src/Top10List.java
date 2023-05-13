@@ -78,8 +78,8 @@ public class Top10List {
                 // If the end of the previous line is not reached, this if statement will start a new line
                 if (!satirinSonu) {bufWriter.newLine();}
                 bufWriter.close();
-                
                 FileWriter newWriter = new FileWriter(file);
+                //this for loop will write the players to the Top10List.txt file
                 for (int i = 0; i < Math.min(10, playerScores.size()); i++) {
                     int score = playerScores.get(i);
                     String playerName = playerNames.get(i);
@@ -87,6 +87,14 @@ public class Top10List {
                     	if(sc.hasNextLine()) {newWriter.write(playerName + " " + score + "\n");}
                         else {newWriter.write(playerName + " " + score + "\n");}
                     } catch (Exception e) {System.out.println("An error occurred while writing to file: " + e.getMessage());}
+                }
+                //this for loop will print the top10list on the console
+                for(int k =0;k<Math.min(10, playerScores.size());k++) {
+                	int score = playerScores.get(k);
+                    String playerName = playerNames.get(k);
+                    try {
+                    	System.out.println((k+1) + ". Player's Name is : " + playerName + " and " + playerName + "'s score is : " + score);
+                    } catch (Exception e) {System.out.println("An error occurred while printing the Top 10 player " + e.getMessage());}
                 }
                 bufferedReader.close();
                 fileReader.close();
