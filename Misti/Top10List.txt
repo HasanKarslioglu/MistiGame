@@ -1,10 +1,10 @@
 pc2 81
-pc1 74
-eser 50
-pc 49
-pc2 48
-pc1 45
-pc2 40
+pc2 79
+eser 74
+pc 50
+pc2 49
+pc1 48
+pc2 45
+pc1 40
 pc1 39
-pc1 36
 pc1 36
