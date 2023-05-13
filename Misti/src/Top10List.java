@@ -31,6 +31,7 @@ public class Top10List {
                 highestScorePlayer = player;
             }
         }
+        //This "if" line checks the "Top10List.txt" file is already exists or not
         if(file.exists()) {
         	try {
                 FileReader fileReader = new FileReader("Top10List.txt");
@@ -51,47 +52,49 @@ public class Top10List {
                     } catch (Exception e) {
                     	
                     	}
-                } // playerScores ve playerNames listelerini sıralama öncesi bir kopyalarını oluştur
+                } // Make a pre-sort copy of the player Scores and player Names lists
 				ArrayList<Integer> sortedPlayerScores = new ArrayList<>(playerScores);
 				ArrayList<String> sortedPlayerNames = new ArrayList<>(playerNames);
-				// playerScores listesini, öğeleri ters sırayla sırala
+				// Sort playerScores list, items in reverse order
 				Collections.sort(sortedPlayerScores, Comparator.reverseOrder());
 
-				// playerNames ve playerScores listelerini yeni sıraya göre güncelle
+				// Update playerNames and playerScores lists in new order
 				for (int i = 0; i < sortedPlayerScores.size(); i++) {
 				    try {
-				    	int index = playerScores.indexOf(sortedPlayerScores.get(i)); // skorun bulunduğu indeksi al
-					    playerScores.set(i, sortedPlayerScores.get(i)); // yeni sıraya göre skoru güncelle
-					    playerNames.set(i, sortedPlayerNames.get(index)); // yeni sıraya göre ismi güncelle
+				    	int index = playerScores.indexOf(sortedPlayerScores.get(i)); // get the index with the score
+					    playerScores.set(i, sortedPlayerScores.get(i)); // update score in new order
+					    playerNames.set(i, sortedPlayerNames.get(index)); // update name in new order
 					} catch (Exception e) {}
 				}
-                Scanner okuyucu = new Scanner(file);
+                Scanner sc = new Scanner(file);
                 boolean satirinSonu = false;
                 FileWriter writer = new FileWriter(file,true);
                 BufferedWriter bufWriter = new BufferedWriter(writer);
-                while (okuyucu.hasNextLine()) {
-                    String satir = okuyucu.nextLine();
+                // this while loop ensures that only one player is printed per line
+                while (sc.hasNextLine()) {
+                    String satir = sc.nextLine();
                     if (satir.endsWith("\n") || satir.endsWith("\r\n")) {} else {satirinSonu = false;}
                 }
-                // Bir önceki satırın sonuna gelinmemişse yeni bir satır başlatıyoruz
+                // If the end of the previous line is not reached, this if statement will start a new line
                 if (!satirinSonu) {bufWriter.newLine();}
                 bufWriter.close();
+                
                 FileWriter newWriter = new FileWriter(file);
                 for (int i = 0; i < Math.min(10, playerScores.size()); i++) {
                     int score = playerScores.get(i);
                     String playerName = playerNames.get(i);
                     try {
-                    	if(okuyucu.hasNextLine()) {newWriter.write(playerName + " " + score + "\n");}
+                    	if(sc.hasNextLine()) {newWriter.write(playerName + " " + score + "\n");}
                         else {newWriter.write(playerName + " " + score + "\n");}
                     } catch (Exception e) {System.out.println("An error occurred while writing to file: " + e.getMessage());}
                 }
                 bufferedReader.close();
                 fileReader.close();
                 newWriter.close();
-                okuyucu.close();
+                sc.close();
             } catch (Exception e) {e.printStackTrace();}
         }
-        //If the Top10List.txt file does not exist, this else' line will create the file 
+        //If the Top10List.txt file does not exist, this else' line will create the "Top10List.txt" file 
         else {
         	try {
                     file.createNewFile();
