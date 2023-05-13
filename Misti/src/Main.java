@@ -59,6 +59,9 @@ public class Main {
         //Then each computer's name and level.
         GameMode.askNamesAndLevels();
 
+        //It asks, game will be play with vetbose mode or not.
+        GameMode.askVerBoseMode();
+
         //---------SHUFFLE-----------
         Collections.shuffle(unDistributedDeck);
         
@@ -73,26 +76,47 @@ public class Main {
 
     public static void loopGame(){
 
-        printUnDistributedDeck();
+        if(GameMode.isVerbose()){ //If the verbose on then the game will show the undistributed deck ,bots hands and scores
+            printUnDistributedDeck();
 
-        //Dealing cards
-        for (int i = 0; i < numberOfPlayer; i++) {
-            dealCards(playerList.get(i).getHandCards());
-        }
-
-        printRound();
-
-        //Following for loop allows us to play card for each player
-        for (int j = 0; j < 4; j++) {
+            //Dealing cards
             for (int i = 0; i < numberOfPlayer; i++) {
-                playerList.get(i).playCard();
-                stepEachRound++;
+                dealCards(playerList.get(i).getHandCards());
+            }
 
-                //It is necessary for collecting all cards that left on the board at end of the game
-                if(boardDeck.isEmpty()){
-                    lastCollector=i;
+            printRoundVerbose();
+
+            //Following for loop allows us to play card for each player
+            for (int j = 0; j < 4; j++) {
+                for (int i = 0; i < numberOfPlayer; i++) {
+                    playerList.get(i).playCard();
+                    stepEachRound++;
+
+                    //It is necessary for collecting all cards that left on the board at end of the game
+                    if(boardDeck.isEmpty()){
+                        lastCollector=i;
+                    }
+                    printRoundVerbose();
                 }
-                printRound();
+            }
+
+        }else{ //If the verbose is close then game will not show
+            for (int i = 0; i < numberOfPlayer; i++) {
+                dealCards(playerList.get(i).getHandCards());
+            }
+            printRound();
+            //Following for loop allows us to play card for each player undistributed deck ,bots hands and scores
+            for (int j = 0; j < 4; j++) {
+                for (int i = 0; i < numberOfPlayer; i++) {
+                    playerList.get(i).playCard();
+                    stepEachRound++;
+
+                    //It is necessary for collecting all cards that left on the board at end of the game
+                    if(boardDeck.isEmpty()){
+                        lastCollector=i;
+                    }
+                    printRound();
+                }
             }
         }
 
@@ -128,15 +152,31 @@ public class Main {
             }
             System.out.println(playerName + "'s score: "+ score +" points");
         }
-    	
+        System.out.println("----------------------TOP 10 LIST----------------------");
       Top10List.setPlayerList(playerList);
     	Top10List.top10Func();
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
 
     }
-
     private static void printRound(){
+        //Printing entire round...
+        System.out.println("-------------------ROUND "+ round +" ----- STEP "+ stepEachRound + "-------------------");
+        String printBots = "";
+        for (int i = 1; i < numberOfPlayer; i++) {
+            printBots += playerList.get(i).getName() +" : [----] ";
+        }
+
+        System.out.println(printBots);
+        System.out.println();
+        System.out.println("Board("+(printSingleDeck(boardDeck)+")"));
+        System.out.println();
+
+        System.out.println(playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+")  Score: "+playerList.get(0).getScore());
+        System.out.println("----------------------------------------------------------");
+    }
+
+    private static void printRoundVerbose(){
 
         //Printing entire round...
         System.out.println("-------------------ROUND "+ round +" ----- STEP "+ stepEachRound + "-------------------");
@@ -144,8 +184,8 @@ public class Main {
         //Printing bots hands
         String printBotsHand = "";
         for (int i = 1; i < numberOfPlayer; i++) {
-            printBotsHand += playerList.get(i).getName() + "(" + printSingleDeck(playerList.get(i).handCards) + ")  Score: "
-            + playerList.get(i).getScore()+"|";
+            printBotsHand += playerList.get(i).getName() + "(" + printSingleDeck(playerList.get(i).handCards) + ")  |Score: "
+            + playerList.get(i).getScore()+"| ";
         }
 
         System.out.println(printBotsHand);
@@ -154,7 +194,7 @@ public class Main {
         System.out.println("Board("+(printSingleDeck(boardDeck)+")"));
         System.out.println();
 
-        System.out.println(playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+")  Score: "+playerList.get(0).getScore());
+        System.out.println(playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+")  |Score: "+playerList.get(0).getScore()+"|");
         System.out.println("----------------------------------------------------------");
     }
 

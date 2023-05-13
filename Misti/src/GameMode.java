@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class GameMode {
+    static private boolean isVerbose;
     static private final String[] suits = {"♠","♣","♥","♦"};
     static private final String[] cardFaces = {"A","2","3","4","5","6","7",
             "8","9","10","J","Q","K"};
@@ -139,6 +140,22 @@ public class GameMode {
     }
 
 
+    public static void askVerBoseMode(){
+        System.out.println("Will you play in verbose mode? type 'y' for yes 'n' for no");
+        while (true){
+            String input=sc.nextLine().trim();
+            if (input.equalsIgnoreCase("y")) {            //Checks whether the user's input corresponds to 'yes'
+                isVerbose=true;
+                break;
+            }else if(input.equalsIgnoreCase("n")){      //Checks whether the user's input corresponds to 'no'
+                isVerbose=false;
+                break;
+            }else{
+                System.out.println("You entered invalid word. Please just type 'y' for yes 'n' for no");
+            }
+        }
+
+    }
     public static void askNamesAndLevels(){
 
         //In the beginning of the asking, we don't know will be there any human
@@ -215,8 +232,9 @@ public class GameMode {
         Random random=new Random();
         int cutcard=random.nextInt(50)+2;//cutcard will be choosen between 2. and 51. cards. So random will be select number 0-49
         //when we add 2 cutcard will be initilaze between 2-51
-        System.out.println("Computer cut the deck from "+cutcard+". card");
-
+        if(isVerbose()){
+            System.out.println("Computer cut the deck from "+cutcard+". card");
+        }
         List<Card> tempdeck=new ArrayList<>(unDistributedDeckRef.subList(cutcard,unDistributedDeckRef.size()));
         tempdeck.addAll(unDistributedDeckRef.subList(0,cutcard));
         unDistributedDeckRef.clear();
@@ -225,5 +243,5 @@ public class GameMode {
 
     public static void setUnDistributedDeckRef(ArrayList newUnDistributedDeck){unDistributedDeckRef = newUnDistributedDeck;}
     public static void setPlayerList(ArrayList<Player> newPlayerList){playerList = newPlayerList;}
-
+    public static boolean isVerbose() {return isVerbose;}
 }

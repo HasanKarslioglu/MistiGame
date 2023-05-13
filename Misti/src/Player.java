@@ -70,9 +70,15 @@ public abstract class Player {
         }
     return totalBoardPoints;
     }
+    //if cards collected after playing card, then game will calculate scores with each card points.Also if there is a Misti then
+    //it will multiply the taken cards total points with 5.
     protected int calculatePlayerScore(ArrayList<Card>boardCardRef){
         for(int i=0;i<boardCardRef.size();i++){
-            score+=boardCardRef.get(i).getCardPoint();
+           if(isMisti()){
+               score+=(5*boardCardRef.get(i).getCardPoint());
+           }else{
+               score+=boardCardRef.get(i).getCardPoint();
+           }
         }
         return score;
     }

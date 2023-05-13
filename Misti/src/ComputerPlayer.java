@@ -26,12 +26,19 @@ public class ComputerPlayer extends Player {
             } else if (isMisti()) {
                 cardPoints[i]=5*(super.calculateBoardPoints());
                 possibleCardsPoint[i]=cardPoints[i];
+                if(GameMode.isVerbose()){   //If game runs with verbose mode, then player will see bots possible card/s and points.
+                    //Else player will not see this information.
+                    System.out.println("Possible Misti card: "+getHandCards().get(i).getCardFace()+
+                            " Player will get: "+cardPoints[i]+" point.");
+                }
             } else{
                 cardPoints[i]= ( super.calculateBoardPoints() );
                 possibleCardsPoint[i]= cardPoints[i];
-
-                System.out.println("Possible card: "+getHandCards().get(i).getCardFace()+
-                        " Player will get: "+cardPoints[i]+" point.");
+                if(GameMode.isVerbose()){   //If game runs with verbose mode, then player will see bots possible card/s and points.
+                                            //Else player will not see this information.
+                    System.out.println("Possible card: "+getHandCards().get(i).getCardFace()+
+                            " Player will get: "+cardPoints[i]+" point.");
+                }
             }
             boardCardRef.remove(boardCardRef.size()-1);
 
