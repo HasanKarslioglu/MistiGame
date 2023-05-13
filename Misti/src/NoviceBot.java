@@ -6,7 +6,7 @@ public class NoviceBot extends ComputerPlayer{
     @Override
     public void playCard() {
 
-        choose = rnd.nextInt(getHandCards().size());
+        choosedCard = rnd.nextInt(getHandCards().size());
 
         super.playCard();
     }

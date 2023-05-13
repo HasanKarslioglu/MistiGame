@@ -23,8 +23,9 @@ public class Main {
     static private ArrayList<Player> playerList = new ArrayList<>();
 
 
-    //It will be assigned after the asking user by using askHowManyPlayersWillPlay() methodC:\Users\samet\Documents\GitHub\MistiGame\Misti\src\CardValues.txt
-    static private int numberOfPlayer;
+    //It will be assigned after the asking user by using askHowManyPlayersWillPlay() method
+    static private int numberOfPlayer = 0;
+
 
     //Main method is being operating with just 3 method
     public static void main(String[] args) {
@@ -38,32 +39,16 @@ public class Main {
 
     public static void initializeGame(){
 
+        //Calling the setter methods because the GameMode needs to access
+        //these variables through their pointers.
         GameMode.setUnDistributedDeckRef(unDistributedDeck);
         GameMode.setPlayerList(playerList);
         Player.setBoardCardRef(boardDeck);
-        GameMode.makeDeck();
 
-        //----------------------------------------------------------------------
-        //FOR TESTING
-                    GameMode.initializeDeckFromFilePath();
-                    numberOfPlayer = 4;
+        //It creates deck
+        GameMode.createDeck();
 
-                    HumanPlayer human = new HumanPlayer("Hasan");
-                    RegularBot bot1 = new RegularBot("Bot 1");
-                    RegularBot bot2 = new RegularBot("Bot 2");
-                    RegularBot bot3 = new RegularBot("Bot 3");
-
-                    playerList.add(human);
-                    playerList.add(bot1);
-                    playerList.add(bot2);
-                    playerList.add(bot3);
-
-        //FOR TESTING
-        //----------------------------------------------------------------------
-
-        Collections.shuffle(unDistributedDeck);
-
-        //It asks path of the CardValues.txt file for points
+        //It asks path of the CardValues.txt file for each card points
         GameMode.initializeDeckFromFilePath();
 
         //It asks how many players will play the misti game.
@@ -73,16 +58,16 @@ public class Main {
         //Then each computer's name and level.
         GameMode.askNamesAndLevels();
 
-        //This method deals 4 cards to the ArrayList passed as its parameter.
-        //In this case it fills the board with 4 cards.
-        dealCards(boardDeck);
-        
         //---------SHUFFLE-----------
         Collections.shuffle(unDistributedDeck);
         
         //---------CUT-----------
         //The cut method is already suppressing the deck.
         GameMode.cut();
+
+        //This method deals 4 cards to the ArrayList passed as its parameter.
+        //In this case it fills the board with 4 cards.
+        dealCards(boardDeck);
     }
 
     public static void loopGame(){
@@ -96,15 +81,16 @@ public class Main {
 
         printRound();
 
+        //Following for loop allows us to play card for each player
         for (int j = 0; j < 4; j++) {
             for (int i = 0; i < numberOfPlayer; i++) {
                 playerList.get(i).playCard();
                 stepEachRound++;
 
+                //It is necessary for collecting all cards that left on the board at end of the game
                 if(boardDeck.isEmpty()){
                     lastCollector=i;
                 }
-
                 printRound();
             }
         }
@@ -119,12 +105,15 @@ public class Main {
     }
 
     public static void endGame(){
+
     	Top10List.setPlayerList(playerList);
     	Top10List.top10Func();
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
         
+
         System.out.println("------------END OF THE GAME------------");
+
         if(boardDeck.size()!=0){
             playerList.get(lastCollector).getCollectedCards().addAll(boardDeck);
             System.out.println(playerList.get(lastCollector)+" took the last cards on the board.");
@@ -132,29 +121,28 @@ public class Main {
     }
 
     private static void printRound(){
-        //Bütün bir roundu yazdırmak için olan kod
+
+        //Printing entire round...
         System.out.println("-------------------ROUND "+ round +" ----- STEP "+ stepEachRound + "-------------------");
 
+        //Printing bots hands
         String printBotsHand = "";
         for (int i = 1; i < numberOfPlayer; i++) {
-            printBotsHand += playerList.get(i).getName() + "(" + printDeck(playerList.get(i).handCards) + ")   ";
+            printBotsHand += playerList.get(i).getName() + "(" + printSingleDeck(playerList.get(i).handCards) + ")   ";
         }
 
         System.out.println(printBotsHand);
         System.out.println();
 
-        System.out.println("Board("+(printDeck(boardDeck)+")"));
+        System.out.println("Board("+(printSingleDeck(boardDeck)+")"));
         System.out.println();
 
-        System.out.println("MyHand("+printDeck(playerList.get(0).handCards)+")");
+        System.out.println(playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+")");
         System.out.println("----------------------------------------------------------");
-        //TO DO ilerde buna mod ekleyip eğer onu seçtiysek rakibin eli ve dağıtılmamış deste gösterilecek
-        //Ya da ikisi de gizli olacak şeklinde ayarlayacağız. Şu an test aşamasında bu yüzden her şeyi gizlemeden
-        //Gösteriyor
     }
 
-    //Bir tane desteyi yazdırmak için olan yardımcı fonksiyon
-    private static String printDeck(ArrayList<Card> list){
+    //A helper-method to print a single deck in side by side form
+    private static String printSingleDeck(ArrayList<Card> list){
         String temp = "";
         for (int i = 0; i < list.size(); i++) {
             temp += list.get(i).getCardString();
@@ -162,15 +150,15 @@ public class Main {
         return temp;
     }
 
-    //Kartları dağıtan fonksiyon
     private static void dealCards(ArrayList<Card> cardList){
+        // Deal four cards to each player
         for (int i = 0; i < 4; i++) {
             cardList.add(unDistributedDeck.remove(unDistributedDeck.size()-1));
         }
     }
 
-    //Henüz dağıtılmamış olan ya da bir kısmı dağıtılmış olan ana destemizi yazdırıyor
     private static void printUnDistributedDeck(){
+        //Prints the cards that have not been distributed or partially distributed from the main deck
         String temp = "UnDistributedDeck:";
         for (int i = 0; i < unDistributedDeck.size(); i++) {
             temp += unDistributedDeck.get(i).getCardString();
@@ -181,6 +169,9 @@ public class Main {
     	return playerList;
     }
 
-    public static void setNumberOfPlayer(int newNumberOfPlayer) {numberOfPlayer = newNumberOfPlayer;}
+    //-----------GETTERS------------
+    public static void setNumberOfPlayer(int newNumber){numberOfPlayer = newNumber;}
+    //-----------SETTERS------------
     public static int getNumberOfPlayer(){return numberOfPlayer;}
+
 }

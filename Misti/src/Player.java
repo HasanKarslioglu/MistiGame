@@ -28,8 +28,10 @@ public abstract class Player {
         //ÖNCE Alt sınıfların playcardı çalışcak en son super.playCard() ı çalıştırınca buradaki fonksiyon çalışcak
         //Bu sayede kart seçimi ve oynanması olduktan sonra burada, boarddeckin son iki kartı aynı ise kartlar toplanacak
 
+
         System.out.println(getName() +" played " + getHandCards().get(choosedCard).getCardString());
         boardCardRef.add(getHandCards().remove(choosedCard));
+
 
         if (isCollectable())
         {
@@ -38,14 +40,24 @@ public abstract class Player {
             boardCardRef.clear();
         }
         //TODO Calculate player score!!!
+
+
     };
    
-    private boolean isCollectable(){
+    protected boolean isCollectable(){
         return ((boardCardRef.size() > 1) &&
                 ((boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals(boardCardRef.get(boardCardRef.size() - 2).getCardFace()))
                 || (boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals("J"))));
     }
 
+    //We use non-parameter for simulatePlayCard method
+    protected int calculateBoardPoints(){
+       int totalBoardPoints=0;
+        for(int i=0;i<boardCardRef.size();i++){
+            totalBoardPoints+=boardCardRef.get(i).getCardPoint();
+        }
+    return totalBoardPoints;
+    }
 
     //-----------GETTERS------------
     public String getName() {return name;}
