@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -106,18 +107,33 @@ public class Main {
 
     public static void endGame(){
 
-    	Top10List.setPlayerList(playerList);
+        if(boardDeck.size()!=0){
+            playerList.get(lastCollector).getCollectedCards().addAll(boardDeck);
+            System.out.println(playerList.get(lastCollector).getName()+" took the last cards on the board.");
+        }
+        System.out.println("------------END OF THE GAME------------");
+        ArrayList<Integer>scores=new ArrayList<>();
+        for (int i =0 ; i < numberOfPlayer; i++){
+            scores.add(playerList.get(i).getScore());
+        }
+    Collections.sort(scores,Collections.reverseOrder());
+        for(int i = 0; i < numberOfPlayer; i++){
+            int score=scores.get(i);
+            String playerName="";
+            for(int j = 0; j < numberOfPlayer; j++){
+                if(playerList.get(j).getScore()==score){
+                    playerName=playerList.get(j).getName();
+                    break;
+                }
+            }
+            System.out.println(playerName + "'s score: "+ score +" points");
+        }
+    	
+      Top10List.setPlayerList(playerList);
     	Top10List.top10Func();
         //Kimin kazandığı yazacak ekranda ve oyun bitecek
         //Oyuncunun tekrardan oynayıp oynamadığını soracaz
-        
 
-        System.out.println("------------END OF THE GAME------------");
-
-        if(boardDeck.size()!=0){
-            playerList.get(lastCollector).getCollectedCards().addAll(boardDeck);
-            System.out.println(playerList.get(lastCollector)+" took the last cards on the board.");
-        }
     }
 
     private static void printRound(){
@@ -128,7 +144,8 @@ public class Main {
         //Printing bots hands
         String printBotsHand = "";
         for (int i = 1; i < numberOfPlayer; i++) {
-            printBotsHand += playerList.get(i).getName() + "(" + printSingleDeck(playerList.get(i).handCards) + ")   ";
+            printBotsHand += playerList.get(i).getName() + "(" + printSingleDeck(playerList.get(i).handCards) + ")  Score: "
+            + playerList.get(i).getScore()+"|";
         }
 
         System.out.println(printBotsHand);
@@ -137,7 +154,7 @@ public class Main {
         System.out.println("Board("+(printSingleDeck(boardDeck)+")"));
         System.out.println();
 
-        System.out.println(playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+")");
+        System.out.println(playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+")  Score: "+playerList.get(0).getScore());
         System.out.println("----------------------------------------------------------");
     }
 

@@ -31,7 +31,7 @@ public class HumanPlayer extends Player {
             }
             break;
         }
-
+        choosedCard=chooseInt;
         super.playCard();
     }
 }

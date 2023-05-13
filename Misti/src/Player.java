@@ -13,6 +13,7 @@ public abstract class Player {
     private int score;
     protected ArrayList<Card> handCards = new ArrayList<>();
     protected ArrayList<Card> collectedCards = new ArrayList<>();
+    protected ArrayList<Card> mistiCards= new ArrayList<>();
     protected int choosedCard = 0;
 
     //-----------CONSTRUCTORS------------
@@ -35,8 +36,14 @@ public abstract class Player {
 
         if (isCollectable())
         {
-            System.out.println(getName() + " Took all cards");
-            collectedCards.addAll(boardCardRef);
+            if(isMisti()){
+                System.out.println(getName()+" maked pisti");
+                mistiCards.addAll(boardCardRef);
+            }else{
+                System.out.println(getName() + " Took all cards");
+                collectedCards.addAll(boardCardRef);
+            }
+            calculatePlayerScore(boardCardRef);
             boardCardRef.clear();
         }
         //TODO Calculate player score!!!
@@ -48,6 +55,11 @@ public abstract class Player {
         return ((boardCardRef.size() > 1) &&
                 ((boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals(boardCardRef.get(boardCardRef.size() - 2).getCardFace()))
                 || (boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals("J"))));
+
+    }
+    protected boolean isMisti(){
+        return (boardCardRef.size()==2
+                && (boardCardRef.get(boardCardRef.size() - 1).getCardFace().equals(boardCardRef.get(boardCardRef.size() - 2).getCardFace())));
     }
 
     //We use non-parameter for simulatePlayCard method
@@ -58,12 +70,19 @@ public abstract class Player {
         }
     return totalBoardPoints;
     }
+    protected int calculatePlayerScore(ArrayList<Card>boardCardRef){
+        for(int i=0;i<boardCardRef.size();i++){
+            score+=boardCardRef.get(i).getCardPoint();
+        }
+        return score;
+    }
 
     //-----------GETTERS------------
     public String getName() {return name;}
     public int getScore() {return score;}
     public ArrayList<Card> getHandCards() {return handCards;}
     public ArrayList<Card> getCollectedCards() {return collectedCards;}
+    public ArrayList<Card> getmistiCards() { return mistiCards;}
 
     //-----------SETTERS------------
     public void setName(String name) {this.name = name;}
@@ -71,4 +90,5 @@ public abstract class Player {
     public void setHandCards(ArrayList<Card> handCards) {this.handCards = handCards;}
     public void setCollectedCards(ArrayList<Card> collectedCards) {this.collectedCards = collectedCards;}
     public static void setBoardCardRef(ArrayList<Card> boardCard) {boardCardRef = boardCard;}
+    public void setmistiCards(ArrayList<Card> mistiCards) {this.mistiCards = mistiCards;}
 }
