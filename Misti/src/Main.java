@@ -27,6 +27,7 @@ public class Main {
     //It will be assigned after the asking user by using askHowManyPlayersWillPlay() method
     static private int numberOfPlayer = 0;
 
+
     //Main method is being operating with just 3 method
     public static void main(String[] args) {
         //This function will be executed for one-time actions at the head of the game
@@ -127,7 +128,11 @@ public class Main {
             }
             System.out.println(playerName + "'s score: "+ score +" points");
         }
-
+    	
+      Top10List.setPlayerList(playerList);
+    	Top10List.top10Func();
+        //Kimin kazandığı yazacak ekranda ve oyun bitecek
+        //Oyuncunun tekrardan oynayıp oynamadığını soracaz
 
     }
 
@@ -176,6 +181,9 @@ public class Main {
             temp += unDistributedDeck.get(i).getCardString();
         }
         System.out.println(temp);
+    }
+    public static ArrayList<Player> getPlayerList(){
+    	return playerList;
     }
 
     //-----------GETTERS------------
