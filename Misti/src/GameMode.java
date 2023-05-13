@@ -209,8 +209,8 @@ public class GameMode {
 
 
     public static void cut() {
-        //bu methodta bilgisayar randomla destenin kesileceği kartı seciyor tempdeck arraylisti ile undistributeddecki
-        // ortadan kesilen destesi başa geçiyor
+        //In this method, program choose the card with random. Then, method create a new deck which start with cutted card
+        //and remove 0 to cutted card from undistribured deck. Finally tempdeck will added from the end
 
         Random random=new Random();
         int cutcard=random.nextInt(50)+2;//cutcard will be choosen between 2. and 51. cards. So random will be select number 0-49
