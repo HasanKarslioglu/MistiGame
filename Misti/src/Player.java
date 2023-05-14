@@ -46,7 +46,6 @@ public abstract class Player {
             calculatePlayerScore(boardCardRef);
             boardCardRef.clear();
         }
-        //TODO Calculate player score!!!
 
 
     };
@@ -65,16 +64,21 @@ public abstract class Player {
     //We use non-parameter for simulatePlayCard method
     protected int calculateBoardPoints(){
        int totalBoardPoints=0;
-        for(int i=0;i<boardCardRef.size();i++){
-            totalBoardPoints+=boardCardRef.get(i).getCardPoint();
+        for (Card card : boardCardRef) {
+            totalBoardPoints += card.getCardPoint();
         }
     return totalBoardPoints;
     }
-    protected int calculatePlayerScore(ArrayList<Card>boardCardRef){
-        for(int i=0;i<boardCardRef.size();i++){
-            score+=boardCardRef.get(i).getCardPoint();
+    //if cards collected after playing card, then game will calculate scores with each card points.Also if there is a Misti then
+    //it will multiply the taken cards total points with 5.
+    protected void calculatePlayerScore(ArrayList<Card>boardCardRef){
+        for (Card card : boardCardRef) {
+            if (isMisti()) {
+                setScore(score += (5 * card.getCardPoint()));
+            } else {
+                setScore(score += (card.getCardPoint()));
+            }
         }
-        return score;
     }
 
     //-----------GETTERS------------
