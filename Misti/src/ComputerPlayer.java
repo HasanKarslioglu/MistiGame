@@ -5,8 +5,8 @@ public class ComputerPlayer extends Player {
     protected int[] possibleCardsPoint=new int[4];
 
     //-----------CONSTRUCTORS------------
-    public ComputerPlayer(String name){
-        super(name);
+    public ComputerPlayer(String name, String level){
+        super(name, level);
     }
 
     //-----------METHODS-----------
@@ -39,7 +39,7 @@ public class ComputerPlayer extends Player {
                 possibleCardsPoint[i]= cardPoints[i];
                 if(GameMode.isVerbose()){   //If game runs with verbose mode, then player will see bots possible card/s and points.
                                             //Else player will not see this information.
-                    System.out.println("If player plays '"+getHandCards().get(i).getCardFace()+
+                    System.out.println("If "+ getName() + " plays '"+getHandCards().get(i).getCardFace()+
                             "' will get: "+cardPoints[i]+" point.");
                 }
             }

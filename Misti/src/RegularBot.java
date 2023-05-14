@@ -1,6 +1,6 @@
 public class RegularBot extends ComputerPlayer {
     public RegularBot(String name) {
-        super(name);
+        super(name, "R");
     }
 
     @Override

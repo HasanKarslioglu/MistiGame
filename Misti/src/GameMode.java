@@ -32,26 +32,23 @@ public class GameMode {
         }
     }
 
-    public static void initializeDeckFromFilePath(){
+    public static void initializeDeckFromFilePath(String path){
         //Lines going to be store each line of cardValues.txt except double star line
         ArrayList<String> lines = new ArrayList<>();
 
-        System.out.println("Please enter path of card values text");
         Scanner scanText = null;
         //While loop asks path of txt file that contains card values
         while(true){
             try {
-                //Reading file path from command line
-                String filePath = sc.nextLine().trim();
-                File scoreText = new File(filePath);
+                File scoreText = new File(path);
                 //Creating scanner that will scan CardValues.txt
                 scanText = new Scanner(scoreText);
                 System.out.println("Path founded successfully.");
                 break;
             }catch (FileNotFoundException e){
-                System.out.println("Path couldn't found. Enter path of the your txt file. Please try again.");
+                System.out.println("Path couldn't found, please close and restart");
             }catch (IOException e) {
-                System.out.println("Error reading file. Please try again.");
+                System.out.println("Error reading file. please close and restart");
             }
         }
 
@@ -119,110 +116,50 @@ public class GameMode {
         }
     }
 
-    public static void askHowManyPlayersWillPlay(){
 
-        System.out.println("How many player will play the game. Enter 2, 3 or 4");
-        int numberOfPlayer = 0;
-        do {
-            try {
-                //Scanning user input and converted to an integer and saved to numberOfPlayer
-                numberOfPlayer = Integer.parseInt(sc.nextLine());
-                //It checks whether the number is valid or invalid for us
-                if (numberOfPlayer < 2 || numberOfPlayer > 4) {
-                    System.out.println("Please enter 'just' 2, 3 or 4");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter just number: 2, 3 or 4");
-            }
-        } while (numberOfPlayer < 2 || numberOfPlayer > 4);
-
-        Main.setNumberOfPlayer(numberOfPlayer);
-    }
-
-
-    public static void askVerBoseMode(){
-        System.out.println("Will you play in verbose mode? type 'y' for yes 'n' for no");
-        while (true){
-            String input=sc.nextLine().trim();
-            if (input.equalsIgnoreCase("y")) {            //Checks whether the user's input corresponds to 'yes'
-                isVerbose=true;
-                break;
-            }else if(input.equalsIgnoreCase("n")){      //Checks whether the user's input corresponds to 'no'
-                isVerbose=false;
-                break;
-            }else{
-                System.out.println("You entered invalid word. Please just type 'y' for yes 'n' for no");
-            }
-        }
-
-    }
-    public static void askNamesAndLevels(){
-
-        //In the beginning of the asking, we don't know will be there any human
-        //That's why, we assume there won't be a human
-        //If there will be one, the number of bots decrease by one
-        int numberOfBots = Main.getNumberOfPlayer();
-        System.out.println("Will there be a human player in the game? type 'y' for yes 'n' for no");
-        while(true){
-            String input = sc.nextLine().trim();
-            if (input.equalsIgnoreCase("y")){           //Checks whether the user's input corresponds to 'yes'
-                System.out.println("What will be human player name?");
-                String name = sc.nextLine().trim();
-                playerList.add(0, new HumanPlayer(name));        //Create new human player and add it to the player list
-                System.out.println("Human added successfully");
-                numberOfBots--;          //If there is any human player number of bots must be equal to (totalplayer-1)
-                break;
-            }else if(input.equalsIgnoreCase("n")){      //Checks whether the user's input corresponds to 'no'
-                break;
-            }else{
-                System.out.println("You entered invalid word. Please just type 'y' for yes 'n' for no");
-            }
-        }
-
-        for (int i = 0; i < numberOfBots; i++) {
-
-            //Asking name of each bot
-            System.out.println("What will be "+ (i+1) + ". bot name?");
-            String name = sc.nextLine().trim();
-
-            //Asking level of each bot
-            int level;
-            System.out.println("What will be " + name + "' level?");
-            System.out.println("Enter 1 for novice bot, 2 for regular bot, 3 for expert bot");
-
-            //Keep asking user for bot level until a valid input is entered
-            while (true){
-                try{
-                    String levelStr = sc.nextLine().trim();
-                    level = Integer.parseInt(levelStr);
-                    //If level is valid loop must be ended
-                    if (level >= 1 && level <= 3) break;
-
-                    System.out.println("You entered invalid number. Just 1, 2 or 3 will be accepted.");
-                }catch (NumberFormatException e){
-                    System.out.println("Please enter 'just number' like 1, 2 or 3");
-                }
-            }
-
-            //Create new bot and add it to the player list
-            //And also this uses helper-method called createBot. Please refer to that method for more information.
-            playerList.add(createBot(level, name));
-            System.out.println(playerList.get(playerList.size()-1).getName()+" Added successfully. It level is "+ playerList.get(playerList.size()-1).getClass().getSimpleName());
-        }
-    }
 
     //Creates a new bot with the given level and name then returns reference of that bot or null.
-    private static Player createBot(int level, String name){
+    public static void createBot(String name, String level){
         switch (level){
-            case 1:
-                return new NoviceBot(name);
+            case "N":
+                playerList.add(new NoviceBot(name)); break;
+            case "R":
+                playerList.add(new RegularBot(name)); break;
+            case "E":
+                playerList.add(new ExpertBot(name)); break;
+            case "H":
+                playerList.add(0, new HumanPlayer(name));
+        }
+    }
+
+    public static void initializeGameFromArguments(String[] args){
+
+        Main.setNumberOfPlayer(Integer.parseInt(args[0]));
+
+        //It asks path of the CardValues.txt file for each card points
+        GameMode.initializeDeckFromFilePath(args[1]);
+
+
+        //It creates players and after that adding playerList based on arguments
+        switch (Main.getNumberOfPlayer()){
             case 2:
-                return new RegularBot(name);
+                GameMode.createBot(args[2],args[3]);
+                GameMode.createBot(args[4],args[5]);
+                GameMode.setVerboseMode(Boolean.parseBoolean(args[6]));
+                break;
             case 3:
-                return new ExpertBot(name);
-            default:
-                System.out.println("Couldn't generate bot");
-                return null;
+                GameMode.createBot(args[2],args[3]);
+                GameMode.createBot(args[4],args[5]);
+                GameMode.createBot(args[6],args[7]);
+                GameMode.setVerboseMode(Boolean.parseBoolean(args[8]));
+                break;
+            case 4:
+                GameMode.createBot(args[2],args[3]);
+                GameMode.createBot(args[4],args[5]);
+                GameMode.createBot(args[6],args[7]);
+                GameMode.createBot(args[8],args[9]);
+                GameMode.setVerboseMode(Boolean.parseBoolean(args[10]));
+                break;
         }
     }
 
@@ -246,4 +183,5 @@ public class GameMode {
     public static void setUnDistributedDeckRef(ArrayList newUnDistributedDeck){unDistributedDeckRef = newUnDistributedDeck;}
     public static void setPlayerList(ArrayList<Player> newPlayerList){playerList = newPlayerList;}
     public static boolean isVerbose() {return isVerbose;}
+    public static void setVerboseMode(boolean bl){isVerbose = bl;}
 }

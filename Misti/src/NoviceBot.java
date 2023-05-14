@@ -1,6 +1,6 @@
 public class NoviceBot extends ComputerPlayer{
     public NoviceBot(String name) {
-        super(name);
+        super(name, "N");
     }
 
     @Override

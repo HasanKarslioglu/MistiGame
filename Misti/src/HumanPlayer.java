@@ -4,7 +4,7 @@ public class HumanPlayer extends Player {
 
     //-----------CONSTRUCTORS------------
     public HumanPlayer(String name){
-        super(name);
+        super(name, "H");
     }
     static protected Scanner sc = new Scanner(System.in);
 

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -12,6 +11,7 @@ public abstract class Player {
     static protected Random rnd = new Random();
     private String name;
     private int score;
+    private String level;
     protected ArrayList<Card> handCards = new ArrayList<>();            // Player's hand cards
     protected ArrayList<Card> collectedCards = new ArrayList<>();       // Cards collected by the player
     protected ArrayList<Card> mistiCards= new ArrayList<>();
@@ -36,8 +36,9 @@ public abstract class Player {
     }};
 
     //-----------CONSTRUCTORS------------
-    public Player(String name){
+    public Player(String name, String level){
         this.name = name;
+        this.level = level;
         score = 0;
     }
 
@@ -120,12 +121,10 @@ public abstract class Player {
     public ArrayList<Card> getCollectedCards() {return collectedCards;}
     public ArrayList<Card> getmistiCards() { return mistiCards;}
     public HashMap<String, Integer> getCardMap(){return cardMappings;}
+    public String getLevel(){return level;}
 
     //-----------SETTERS------------
     public void setName(String name) {this.name = name;}
     public void setScore(int score) {this.score = score;}
-    public void setHandCards(ArrayList<Card> handCards) {this.handCards = handCards;}
-    public void setCollectedCards(ArrayList<Card> collectedCards) {this.collectedCards = collectedCards;}
     public static void setBoardCardRef(ArrayList<Card> boardCard) {boardCardRef = boardCard;}
-    public void setmistiCards(ArrayList<Card> mistiCards) {this.mistiCards = mistiCards;}
 }

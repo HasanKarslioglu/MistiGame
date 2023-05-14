@@ -40,7 +40,9 @@ public class Top10List {
                 try {
                 	String tempPlayer = highestScorePlayer.getName() + " "  + Integer.toString(highestScorePlayer.getScore());
                 	topPlayers.add(tempPlayer);
-				} catch (Exception e) {} 
+				} catch (Exception e) {
+                    e.printStackTrace();
+                }
                 //Separates points and names for each topPlayer object saved as a string and saves separate arraylists
                 for (String player : topPlayers) {
                     String[] tokens = player.split(" ");
@@ -48,8 +50,11 @@ public class Top10List {
                     try {
                         int score = Integer.parseInt(tokens[1]);
                         playerScores.add(score);
-                    } catch (Exception e) {}
-                } // Make a pre-sort copy of the player Scores and player Names lists
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                // Make a pre-sort copy of the player Scores and player Names lists
 				ArrayList<Integer> sortedPlayerScores = new ArrayList<>(playerScores);
 				ArrayList<String> sortedPlayerNames = new ArrayList<>(playerNames);
 				// Sort playerScores list, items in reverse order
@@ -63,6 +68,7 @@ public class Top10List {
 					    playerNames.set(i, sortedPlayerNames.get(index)); // update name in new order
 					} catch (Exception e) {}
 				}
+
 				//Checking whether the end of each line has been reached with the scanner and writer
                 Scanner sc = new Scanner(file);
                 boolean endLine = false;

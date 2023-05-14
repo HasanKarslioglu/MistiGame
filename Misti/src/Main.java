@@ -30,14 +30,16 @@ public class Main {
     //Main method is being operating with just 3 method
     public static void main(String[] args) {
         //This function will be executed for one-time actions at the head of the game
-        initializeGame();
+        initializeGame(args);
         //This method will be executed for represent each round of the game
         loopGame();
         //This function will be executed for one-time actions at the end of the game
         endGame();
     }
 
-    public static void initializeGame(){
+
+    //----------------------------INITIZALIZE GAME--------------------------------
+    public static void initializeGame(String[] args){
 
         //Calling the setter methods because the GameMode needs to access
         //these variables through their pointers.
@@ -48,18 +50,8 @@ public class Main {
         //It creates deck
         GameMode.createDeck();
 
-        //It asks path of the CardValues.txt file for each card points
-        GameMode.initializeDeckFromFilePath();
-
-        //It asks how many players will play the misti game.
-        GameMode.askHowManyPlayersWillPlay();
-
-        //It asks firstly, will be there any human player and his or her name.
-        //Then each computer's name and level.
-        GameMode.askNamesAndLevels();
-
-        //It asks, game will play with verbose mode or not.
-        GameMode.askVerBoseMode();
+        //It initialize game based on comment line arguments
+        GameMode.initializeGameFromArguments(args);
 
         //---------SHUFFLE-----------
         Collections.shuffle(unDistributedDeck);
@@ -73,6 +65,7 @@ public class Main {
         dealCards(boardDeck);
     }
 
+    //----------------------------LOOP GAME--------------------------------
     public static void loopGame(){
 
         //Dealing cards
@@ -106,7 +99,7 @@ public class Main {
     }
 
 
-
+    //----------------------------END GAME--------------------------------
     public static void endGame(){
 
         if(boardDeck.size()!=0){
@@ -137,6 +130,12 @@ public class Main {
         Top10List.setPlayerList(playerList);
     	Top10List.organizeWinnerList();
     }
+
+
+
+
+
+    //----------------------------PRINTING METHODS--------------------------------
     private static void printRound(){
         //If the verbose on then the game will show the undistributed deck, bots hands and scores
         if (GameMode.isVerbose()){
@@ -154,7 +153,7 @@ public class Main {
         System.out.println("-------------------ROUND "+ round +" ----- STEP "+ stepEachRound + "-------------------");
         String printBots = "";
         for (int i = 1; i < numberOfPlayer; i++) {
-            printBots += playerList.get(i).getName() +"[----] ";
+            printBots +=  "("+playerList.get(i).getLevel() +")"+ playerList.get(i).getName() +"[----] ";
         }
 
         System.out.println(printBots);
@@ -162,19 +161,21 @@ public class Main {
         System.out.println("Board("+(printSingleDeck(boardDeck)+")"));
         System.out.println();
 
-        System.out.println(playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+")  Score: "+playerList.get(0).getScore());
+        System.out.println("("+playerList.get(0).getLevel() + ")"+playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+")  Score: "+playerList.get(0).getScore());
         System.out.println("----------------------------------------------------------");
     }
 
     private static void printRoundOnVerbose(){
 
         //Printing entire round...
+        System.out.println();
+        System.out.println();
         System.out.println("-------------------ROUND "+ round +" ----- STEP "+ stepEachRound + "-------------------");
 
         //Printing bots hands
         String printBotsHand = "";
         for (int i = 1; i < numberOfPlayer; i++) {
-            printBotsHand += playerList.get(i).getName() + "(" + printSingleDeck(playerList.get(i).handCards) + ")|Score:"
+            printBotsHand += "("+ playerList.get(i).getLevel()+ ")"+playerList.get(i).getName() + "(" + printSingleDeck(playerList.get(i).handCards) + ")|Score:"
             + playerList.get(i).getScore()+"|   ";
         }
 
@@ -184,7 +185,7 @@ public class Main {
         System.out.println("Board("+(printSingleDeck(boardDeck)+")"));
         System.out.println();
 
-        System.out.println(playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+") |Score:"+playerList.get(0).getScore()+"|");
+        System.out.println("("+playerList.get(0).getLevel() +")"+ playerList.get(0).getName() +"("+ printSingleDeck(playerList.get(0).handCards)+") |Score:"+playerList.get(0).getScore()+"|");
         System.out.println("----------------------------------------------------------");
     }
 
@@ -199,20 +200,21 @@ public class Main {
         return temp;
     }
 
-    private static void dealCards(ArrayList<Card> cardList){
-        // Deal four cards to each player
-        for (int i = 0; i < 4; i++) {
-            cardList.add(unDistributedDeck.remove(unDistributedDeck.size()-1));
-        }
-    }
 
     private static void printUnDistributedDeck(){
         //Prints the cards that have not been distributed or partially distributed from the main deck
         String temp = "UnDistributedDeck:";
         for (int i = 0; i < unDistributedDeck.size(); i++) {
-            temp += unDistributedDeck.get(i).getCardString();
+            temp += unDistributedDeck.get(i).getCardString() + " ";
         }
         System.out.println(temp);
+    }
+
+    private static void dealCards(ArrayList<Card> cardList){
+        // Deal four cards to each player
+        for (int i = 0; i < 4; i++) {
+            cardList.add(unDistributedDeck.remove(unDistributedDeck.size()-1));
+        }
     }
     public static ArrayList<Player> getPlayerList(){
     	return playerList;

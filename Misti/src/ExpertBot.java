@@ -11,7 +11,7 @@ public class ExpertBot extends ComputerPlayer {
     private int [] eachHandCardPlayedNumber = new int[4];
 
     public ExpertBot(String name) {
-        super(name);
+        super(name, "E");
     }
 
     @Override
