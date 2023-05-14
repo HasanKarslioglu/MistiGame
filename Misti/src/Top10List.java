@@ -23,6 +23,7 @@ public class Top10List {
 		String fileName = "Top10List.txt";
         File file = new File(fileName);
         Collections.sort(playerList, new ScoreComparator());
+        //The player list is sorted by the highest scoring player then pulls the highest scoring player
         int highestScore = Integer.MIN_VALUE;
         Player highestScorePlayer = null;
         for (Player player : playerList) {
@@ -41,24 +42,22 @@ public class Top10List {
                 try {
                 	String tempPlayer = highestScorePlayer.getName() + " "  + Integer.toString(highestScorePlayer.getScore());
                 	topPlayers.add(tempPlayer);
-				} catch (Exception e) {
-					
-				} for (String player : topPlayers) {
+				} catch (Exception e) {} 
+                //Separates points and names for each topPlayer object saved as a string and saves separate arraylists
+                for (String player : topPlayers) {
                     String[] tokens = player.split(" ");
                     playerNames.add(tokens[0]);
                     try {
                         int score = Integer.parseInt(tokens[1]);
                         playerScores.add(score);
-                    } catch (Exception e) {
-                    	
-                    	}
+                    } catch (Exception e) {}
                 } // Make a pre-sort copy of the player Scores and player Names lists
 				ArrayList<Integer> sortedPlayerScores = new ArrayList<>(playerScores);
 				ArrayList<String> sortedPlayerNames = new ArrayList<>(playerNames);
 				// Sort playerScores list, items in reverse order
 				Collections.sort(sortedPlayerScores, Comparator.reverseOrder());
 
-				// Update playerNames and playerScores lists in new order
+				// Update playerNames and playerScores indexes in new order with for loop
 				for (int i = 0; i < sortedPlayerScores.size(); i++) {
 				    try {
 				    	int index = playerScores.indexOf(sortedPlayerScores.get(i)); // get the index with the score
@@ -66,20 +65,22 @@ public class Top10List {
 					    playerNames.set(i, sortedPlayerNames.get(index)); // update name in new order
 					} catch (Exception e) {}
 				}
+				//Checking whether the end of each line has been reached with the scanner and writer
                 Scanner sc = new Scanner(file);
-                boolean satirinSonu = false;
+                boolean endLine = false;
                 FileWriter writer = new FileWriter(file,true);
                 BufferedWriter bufWriter = new BufferedWriter(writer);
                 // this while loop ensures that only one player is printed per line
                 while (sc.hasNextLine()) {
                     String satir = sc.nextLine();
-                    if (satir.endsWith("\n") || satir.endsWith("\r\n")) {} else {satirinSonu = false;}
+                    if (satir.endsWith("\n") || satir.endsWith("\r\n")) {} else {endLine = false;}
                 }
                 // If the end of the previous line is not reached, this if statement will start a new line
-                if (!satirinSonu) {bufWriter.newLine();}
+                if (!endLine) {bufWriter.newLine();}
                 bufWriter.close();
                 FileWriter newWriter = new FileWriter(file);
-                //this for loop will write the players to the Top10List.txt file
+                //This for loop will write the players to the Top10List.txt file
+                //With the help of the Math.min method, the top 10 players in the payerScores list will be drawn and each will be added to the file with the name first and then the score.
                 for (int i = 0; i < Math.min(10, playerScores.size()); i++) {
                     int score = playerScores.get(i);
                     String playerName = playerNames.get(i);
@@ -89,6 +90,7 @@ public class Top10List {
                     } catch (Exception e) {System.out.println("An error occurred while writing to file: " + e.getMessage());}
                 }
                 //this for loop will print the top10list on the console
+                //Same with the file writer above for loop, top 10 player will print console at the end of game
                 for(int k =0;k<Math.min(10, playerScores.size());k++) {
                 	int score = playerScores.get(k);
                     String playerName = playerNames.get(k);
@@ -111,9 +113,9 @@ public class Top10List {
         }
     }
 	//-----------SETTERS------------
-		public static void setPlayerList(ArrayList<Player> newList) {Top10List.playerList = newList;} 
+		public static void setPlayerList(ArrayList<Player> newList) {Top10List.playerList = newList;}
 }
-    //Helper class for the ScoreComparator
+    //Helper class for the ScoreComparator. With this helper class, the players in the playerList are sorted according to their score status.
  class ScoreComparator implements Comparator<Player> {
     public int compare(Player p1, Player p2) {
         return Integer.compare(p1.getScore(), p2.getScore());
