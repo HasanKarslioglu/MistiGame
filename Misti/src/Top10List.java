@@ -76,8 +76,8 @@ public class Top10List {
                 BufferedWriter bufWriter = new BufferedWriter(writer);
                 // this while loop ensures that only one player is printed per line
                 while (sc.hasNextLine()) {
-                    String satir = sc.nextLine();
-                    if (satir.endsWith("\n") || satir.endsWith("\r\n")) {} else {endLine = false;}
+                    String line2 = sc.nextLine();
+                    if (line2.endsWith("\n") || line2.endsWith("\r\n")) {} else {endLine = false;}
                 }
                 // If the end of the previous line is not reached, this if statement will start a new line
                 if (!endLine) {bufWriter.newLine();}
