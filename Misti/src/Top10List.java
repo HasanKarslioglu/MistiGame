@@ -3,8 +3,6 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,7 +17,7 @@ public class Top10List {
     private static ArrayList<Integer> playerScores = new ArrayList<>();
 	
   //-----------METHODS------------
-	public static void top10Func() {
+	public static void organizeWinnerList() {
 		String fileName = "Top10List.txt";
         File file = new File(fileName);
         Collections.sort(playerList, new ScoreComparator());
@@ -93,7 +91,7 @@ public class Top10List {
                 	int score = playerScores.get(k);
                     String playerName = playerNames.get(k);
                     try {
-                    	System.out.println((k+1) + ". Player's Name is : " + playerName + " and " + playerName + "'s score is : " + score);
+                    	System.out.println((k+1) + ". Player's Name is " + playerName + " and " + playerName + " score is : " + score);
                     } catch (Exception e) {System.out.println("An error occurred while printing the Top 10 player " + e.getMessage());}
                 }
                 bufferedReader.close();
@@ -106,7 +104,7 @@ public class Top10List {
         else {
         	try {
                     file.createNewFile();
-                    top10Func();
+                    organizeWinnerList();
             } catch (Exception e) {System.out.println("An error occurred while creaiting to file: " + e.getMessage());}
         }
     }

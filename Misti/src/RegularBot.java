@@ -7,7 +7,7 @@ public class RegularBot extends ComputerPlayer {
     public void playCard() {
         super.simulatePlaycard();
         int possiblePoint=0;
-        for (int i = 0; i < possibleCardsPoint.length; i++) {
+        for (int i = 0; i < getHandCards().size(); i++) {
            //if points are bigger than 0 then it will choose a card
                //if previous possible card have more points choose card stay at previous card
                 if( possibleCardsPoint[i] > possiblePoint){

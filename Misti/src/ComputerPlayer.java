@@ -9,8 +9,11 @@ public class ComputerPlayer extends Player {
         super(name);
     }
 
-    //-----------METHODS------------
+    //-----------METHODS-----------
 
+
+    //The "simulatePlayCard" function iterates through each card in player hand, calculates the
+    //possible scores it can achieve by playing that card, and saves it to an array.
     protected void simulatePlaycard(){
         //in every step the saved points will be renewed.
         Arrays.fill(possibleCardsPoint,0);
@@ -36,8 +39,8 @@ public class ComputerPlayer extends Player {
                 possibleCardsPoint[i]= cardPoints[i];
                 if(GameMode.isVerbose()){   //If game runs with verbose mode, then player will see bots possible card/s and points.
                                             //Else player will not see this information.
-                    System.out.println("Possible card: "+getHandCards().get(i).getCardFace()+
-                            " Player will get: "+cardPoints[i]+" point.");
+                    System.out.println("If player plays '"+getHandCards().get(i).getCardFace()+
+                            "' will get: "+cardPoints[i]+" point.");
                 }
             }
             boardCardRef.remove(boardCardRef.size()-1);

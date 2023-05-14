@@ -7,10 +7,10 @@ public class Card {
 
     //-----------CONSTRUCTORS------------
     public Card(){
-        //# means empty card
+        // # means empty card
         suit = "#";
         cardFace = "#";
-        //Default value is 1 based on project description
+        //Default value is 1, based on project description
         cardPoint = 1;
     }
 
