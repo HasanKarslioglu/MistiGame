@@ -12,7 +12,6 @@ public class HumanPlayer extends Player {
     //-----------METHODS------------
     @Override
     public void playCard() {
-        //Basitçe oyuncuya soruyoruz ve girilen kartı yere atıyoruz
 
         System.out.println("Which card do you want to play enter 1 to " + getHandCards().size());
         int chooseInt = 1;
